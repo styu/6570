@@ -1,6 +1,7 @@
 package edu.mit.printAtMIT.view;
 
 import android.app.Activity;
+import android.app.ListActivity;
 
 /**
  * Lists all the printers from database.
@@ -11,7 +12,8 @@ import android.app.Activity;
  *      Settings
  *      About
  *      Home
+ *      Refresh
  */
-public class PrinterListActivity extends Activity {
+public class PrinterListActivity extends ListActivity {
 
 }
