@@ -12,7 +12,8 @@
               android:background="@android:drawable/editbox_background"
               android:layout_centerVertical="true"
               android:paddingBottom="20px"
-              android:padding="40px"
+              android:layout_marginLeft="40dp"
+              android:layout_marginRight="40dp"
                />
     
    	<TextView android:id="@+id/label" 
