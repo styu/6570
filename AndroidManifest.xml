@@ -10,14 +10,24 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <activity
-            android:name=".PrintAtMITActivity"
+            android:name=".main.LoginActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+ <!--   <activity android:name=".main.LoginActivity"></activity> -->
+        <activity android:name=".main.MainMenuActivity"></activity>
+        <activity android:name=".main.SettingsActivity"></activity>
+        <activity android:name=".print.PrintDownloadsActivity"></activity>
+        <activity android:name=".print.PrintMenuActivity"></activity>
+        <activity android:name=".print.PrintOptionsActivity"></activity>
+        <activity android:name=".view.MapActivity"></activity>
+        <activity android:name=".view.PrinterInfoActivity"></activity>
+        <activity android:name=".view.PrinterListActivity"></activity>
+        
+        
     </application>
 
 </manifest>
