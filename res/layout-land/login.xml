@@ -3,7 +3,7 @@
                 android:layout_width="fill_parent" 
                 android:layout_height="fill_parent"
                 android:padding="10px" 
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
     
      <EditText android:id="@+id/entry" 
@@ -12,6 +12,7 @@
               android:background="@android:drawable/editbox_background"
               android:layout_centerVertical="true"
               android:paddingBottom="20px"
+              android:padding="40px"
                />
     
    	<TextView android:id="@+id/label" 
