@@ -1,16 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent" 
+                android:layout_height="fill_parent"
+                android:padding="10px" >
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Login Menu" />
-	<Button android:id="@+id/button01" 
-	  android:text="MainMenuActivity"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content" />
     
-</LinearLayout>
+
+    <EditText android:id="@+id/entry" 
+              android:layout_width="fill_parent" 
+              android:layout_height="wrap_content" 
+              android:background="@android:drawable/editbox_background"
+              android:layout_centerVertical="true"
+              android:paddingBottom="20px"
+               />
+    
+   	<TextView android:id="@+id/label" 
+              android:layout_width="wrap_content" 
+              android:layout_height="wrap_content" 
+              android:layout_centerHorizontal="true"
+              android:paddingBottom="20px"
+              android:text="Enter your Kerberos ID"
+              android:layout_above="@id/entry" />
+    
+  		<Button android:id="@+id/button01"
+			android:text="Continue" 
+			android:layout_width="200px" 
+            android:layout_height="wrap_content"
+            android:layout_below="@id/entry"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10px" />
+</RelativeLayout>
