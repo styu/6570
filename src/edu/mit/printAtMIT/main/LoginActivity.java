@@ -18,13 +18,13 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         
-        /*Button button01 = (Button) findViewById(R.id.button01);
+        Button button01 = (Button) findViewById(R.id.button01);
         button01.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
             	Intent intent = new Intent(view.getContext(), MainMenuActivity.class);
             	startActivity(intent);
             }
-        });*/
+        });
     }
 }
