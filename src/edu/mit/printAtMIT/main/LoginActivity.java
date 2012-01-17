@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 /**
  * This is the first activity a user will see upon first opening this app.
@@ -17,13 +18,13 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         
-        Button button01 = (Button) findViewById(R.id.button01);
+        /*Button button01 = (Button) findViewById(R.id.button01);
         button01.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
             	Intent intent = new Intent(view.getContext(), MainMenuActivity.class);
             	startActivity(intent);
             }
-        });
+        });*/
     }
 }
