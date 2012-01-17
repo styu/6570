@@ -25,7 +25,7 @@
 		android:layout_marginBottom = "10px"
 		android:layout_centerVertical="true"/>
 	<Button android:id="@+id/button02" 
-	  android:text="Printer List"
+	  android:text="View Printers"
 		android:layout_width="300px"
 		android:layout_height="wrap_content" 
 		android:layout_below="@id/button01"
