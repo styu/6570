@@ -5,8 +5,7 @@
                 android:padding="10px" >
 
     
-
-    <EditText android:id="@+id/entry" 
+     <EditText android:id="@+id/entry" 
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
               android:background="@android:drawable/editbox_background"
@@ -21,8 +20,16 @@
               android:paddingBottom="20px"
               android:text="Enter your Kerberos ID"
               android:layout_above="@id/entry" />
-    
-  		<Button android:id="@+id/button01"
+    <ImageView 
+	   android:id="@+id/logo"
+	   android:src="@drawable/logo"
+	   android:layout_width="wrap_content"
+	   android:layout_height="wrap_content"
+	   android:layout_centerHorizontal="true"
+	   android:layout_above="@id/label"
+	   android:paddingBottom="30px"
+	   />
+   	<Button android:id="@+id/button01"
 			android:text="Continue" 
 			android:layout_width="200px" 
             android:layout_height="wrap_content"
