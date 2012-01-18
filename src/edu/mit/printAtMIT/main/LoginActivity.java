@@ -1,8 +1,5 @@
 package edu.mit.printAtMIT.main;
 
-import com.parse.Parse;
-import com.parse.ParseObject;
-
 import edu.mit.printAtMIT.R;
 import edu.mit.printAtMIT.PrintAtMITActivity;
 import android.app.Activity;
@@ -23,13 +20,8 @@ public class LoginActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Parse.initialize(this, "KIb9mNtPKDtkDk7FJ9W6b7MiAr925a10vNuCPRer",
-                "dSFuQYQXSvslh9UdznzzS9Vb0kDgcKnfzgglLUHT");
         setContentView(R.layout.login);
-
-        ParseObject testObject = new ParseObject("TestObject");
-        testObject.put("foo", "bar");
-        testObject.saveInBackground();
+        
         Button button01 = (Button) findViewById(R.id.button01);
         button01.setOnClickListener(new View.OnClickListener() {
 

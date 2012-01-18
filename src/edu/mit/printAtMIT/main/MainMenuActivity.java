@@ -24,16 +24,16 @@ public class MainMenuActivity extends Activity{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Parse.initialize(this, "KIb9mNtPKDtkDk7FJ9W6b7MiAr925a10vNuCPRer", "dSFuQYQXSvslh9UdznzzS9Vb0kDgcKnfzgglLUHT"); 
-
         setContentView(R.layout.main_menu);
-
+        Parse.initialize(this, "KIb9mNtPKDtkDk7FJ9W6b7MiAr925a10vNuCPRer", "dSFuQYQXSvslh9UdznzzS9Vb0kDgcKnfzgglLUHT"); 
+        
         Button button01 = (Button) findViewById(R.id.button01);
         Button button02 = (Button) findViewById(R.id.button02);
         button01.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
             	Intent intent = new Intent(view.getContext(), PrintMenuActivity.class);
+            	intent.putExtra("activity", "mainmenu");
             	startActivity(intent);
             }
         });
@@ -68,5 +68,17 @@ public class MainMenuActivity extends Activity{
         default:
             return super.onOptionsItemSelected(item);
         }
+    }
+    
+    @Override
+    public void onBackPressed() {
+       Intent intent = getIntent();
+       String activity = intent.getStringExtra("activity");
+       if (activity.equals("start")) {
+    	   return;
+       }
+       else {
+    	   super.onBackPressed();
+       }
     }
 }
