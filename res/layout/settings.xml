@@ -4,8 +4,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Settings" />
+    <TextView android:id="@+id/label" 
+              android:layout_width="wrap_content" 
+              android:layout_height="wrap_content" 
+              android:text="Kerberos ID: "/>
+    
+   <EditText android:id="@+id/entry" 
+              android:layout_width="200dp" 
+              android:layout_height="wrap_content" 
+              android:background="@android:drawable/editbox_background"
+              android:layout_centerVertical="true"
+               />
 </LinearLayout>

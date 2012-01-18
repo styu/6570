@@ -4,10 +4,6 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <!-- <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Main Menu" />-->
     <ImageView 
 	   android:id="@+id/logo"
 	   android:src="@drawable/logo"
