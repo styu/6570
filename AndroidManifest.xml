@@ -27,8 +27,6 @@
         <activity android:name=".view.MapActivity"></activity>
         <activity android:name=".view.PrinterInfoActivity"></activity>
         <activity android:name=".view.PrinterListActivity"></activity>
-        
-        
     </application>
     
 </manifest>
