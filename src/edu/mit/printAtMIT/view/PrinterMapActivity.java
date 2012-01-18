@@ -7,7 +7,6 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
-
 import edu.mit.printAtMIT.R;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
