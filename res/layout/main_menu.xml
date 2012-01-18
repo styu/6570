@@ -4,10 +4,6 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <!-- <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Main Menu" />-->
     <ImageView 
 	   android:id="@+id/logo"
 	   android:src="@drawable/logo"
@@ -19,14 +15,14 @@
 	   />
 	<Button android:id="@+id/button01" 
 	  android:text="Print"
-		android:layout_width="300px"
+		android:layout_width="200dp"
 		android:layout_height="wrap_content"
 		android:layout_centerHorizontal="true"
 		android:layout_marginBottom = "10px"
 		android:layout_centerVertical="true"/>
 	<Button android:id="@+id/button02" 
 	  android:text="View Printers"
-		android:layout_width="300px"
+		android:layout_width="200dp"
 		android:layout_height="wrap_content" 
 		android:layout_below="@id/button01"
 		android:layout_centerHorizontal="true"/>

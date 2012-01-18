@@ -19,9 +19,8 @@ import android.widget.Button;
  * 
  * Menu Item: Settings About Home Refresh
  */
-public class PrinterListActivity extends Activity {
-        
 
+public class PrinterListActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
