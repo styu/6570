@@ -24,8 +24,9 @@ public class MainMenuActivity extends Activity{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_menu);
         Parse.initialize(this, "KIb9mNtPKDtkDk7FJ9W6b7MiAr925a10vNuCPRer", "dSFuQYQXSvslh9UdznzzS9Vb0kDgcKnfzgglLUHT"); 
+
+        setContentView(R.layout.main_menu);
 
         Button button01 = (Button) findViewById(R.id.button01);
         Button button02 = (Button) findViewById(R.id.button02);

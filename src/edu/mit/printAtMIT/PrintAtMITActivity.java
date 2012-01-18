@@ -18,8 +18,9 @@ public class PrintAtMITActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
         Parse.initialize(this, "KIb9mNtPKDtkDk7FJ9W6b7MiAr925a10vNuCPRer", "dSFuQYQXSvslh9UdznzzS9Vb0kDgcKnfzgglLUHT"); 
+
+        setContentView(R.layout.main);
 
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         
