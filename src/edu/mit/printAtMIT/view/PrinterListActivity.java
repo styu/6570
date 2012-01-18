@@ -2,7 +2,6 @@ package edu.mit.printAtMIT.view;
 
 import edu.mit.printAtMIT.R;
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -17,9 +16,8 @@ import android.widget.Button;
  *      Settings
  *      About
  *      Home
- *      Refresh
  */
-public class PrinterListActivity extends ListActivity {
+public class PrinterListActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

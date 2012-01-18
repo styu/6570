@@ -3,5 +3,6 @@
 
     <string name="hello">Hello World, PrintAtMITActivity!</string>
     <string name="app_name">PrintAtMIT</string>
-
+	<string name="setting">Settings</string>
+	<string name="about">About</string>
 </resources>
