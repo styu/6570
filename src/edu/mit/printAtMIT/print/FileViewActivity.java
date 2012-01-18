@@ -1,10 +1,10 @@
 package edu.mit.printAtMIT.print;
 
-import android.app.Activity;
+import android.app.ListActivity;
 
 /**
  * Abstract class for all file views
  */
-abstract public class FileViewActivity extends Activity{
+abstract public class FileViewActivity extends ListActivity{
 
 }
