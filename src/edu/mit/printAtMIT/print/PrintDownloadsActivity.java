@@ -22,12 +22,12 @@ import edu.mit.printAtMIT.R;
  *      About
  */
 public class PrintDownloadsActivity extends FileViewActivity {
-	
-	private File files = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+	private File files;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        files = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         
         if (files.list() == null)
         {

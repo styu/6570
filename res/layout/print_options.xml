@@ -8,4 +8,13 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Print Options" />
+    <Button android:id="@+id/button01" 
+	  	android:text="Print"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/textStatus"
+        android:text="nothing"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>
