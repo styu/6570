@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:padding="5dp" >
+   	
+   	<View
+    android:layout_width="fill_parent"
+    android:layout_height="0.03dip"
+    android:layout_marginLeft="5dip"
+    android:layout_marginRight="5dip"
+    android:layout_marginBottom="30dip"
+    android:background="@drawable/line_gradient" />
+    <TextView
+	   android:id="@+id/change_username"
+	   android:layout_width="fill_parent"
+	   android:layout_height="wrap_content"
+	   android:layout_centerHorizontal="true"
+	   android:layout_marginBottom="10dp"
+	   android:scrollHorizontally="false"
+	   android:ellipsize="none"
+	   android:inputType="textMultiLine"
+	   android:singleLine="false"
+	   android:text="Some blurb about this app. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+	   />
+
+    
+</LinearLayout>

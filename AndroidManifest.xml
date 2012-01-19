@@ -20,8 +20,11 @@
             </intent-filter>
         </activity>
  	    <activity android:name=".main.LoginActivity"></activity>
-        <activity android:name=".main.MainMenuActivity"></activity>
-        <activity android:name=".main.SettingsActivity"></activity>
+        <activity android:name=".main.MainMenuActivity"
+            android:configChanges="keyboardHidden|orientation"></activity>
+        <activity android:name=".main.SettingsActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:title="User Preferences"></activity>
         <activity android:name=".print.PrintDownloadsActivity"></activity>
         <activity android:name=".print.PrintMenuActivity"></activity>
         <activity android:name=".print.PrintOptionsActivity"></activity>

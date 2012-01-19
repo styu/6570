@@ -3,7 +3,9 @@ package edu.mit.printAtMIT.main;
 import com.parse.Parse;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
@@ -48,6 +50,11 @@ public class MainMenuActivity extends Activity{
     }
     
     @Override
+    public void onConfigurationChanged(Configuration newConfig){
+        super.onConfigurationChanged(newConfig);
+    }
+    
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.mainmenu_menu, menu);
@@ -63,6 +70,11 @@ public class MainMenuActivity extends Activity{
         	startActivity(intent);
             return true;
         case R.id.about:
+        	Dialog dialog = new Dialog(this);
+
+			dialog.setContentView(R.layout.about_dialog);
+			dialog.setTitle("About");
+			dialog.show();
             super.onOptionsItemSelected(item);
             return true;
         default:
