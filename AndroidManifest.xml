@@ -20,7 +20,8 @@
             </intent-filter>
         </activity>
  	    <activity android:name=".main.LoginActivity"></activity>
-        <activity android:name=".main.MainMenuActivity"></activity>
+        <activity android:name=".main.MainMenuActivity"
+            android:configChanges="keyboardHidden|orientation"></activity>
         <activity android:name=".main.SettingsActivity"
             android:configChanges="keyboardHidden|orientation"
             android:title="User Preferences"></activity>
