@@ -4,25 +4,20 @@ import com.parse.Parse;
 
 import edu.mit.printAtMIT.R;
 import edu.mit.printAtMIT.PrintAtMITActivity;
-import edu.mit.printAtMIT.print.PrintMenuActivity;
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.ListActivity;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.ListView;
 import android.widget.Toast;
-//import android.widget.PopupMenu;
 
 
 import java.util.ArrayList;
@@ -40,16 +35,12 @@ public class SettingsActivity extends ListActivity {
 	private static final int ITEM_USERNAME = 1;
 	private static final int ITEM_INKCOLOR = 3;
 	private static final int ITEM_COPIES = 4;
-	private static boolean registered = false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.settings);
         Parse.initialize(this, "KIb9mNtPKDtkDk7FJ9W6b7MiAr925a10vNuCPRer", "dSFuQYQXSvslh9UdznzzS9Vb0kDgcKnfzgglLUHT"); 
         
-        //EditText username = (EditText) findViewById(R.id.entry);
         SharedPreferences userSettings = getSharedPreferences(PrintAtMITActivity.PREFS_NAME, MODE_PRIVATE);
-        //username.setText(settings.getString(PrintAtMITActivity.USERNAME, ""));
         items.add(new SectionItem("User info"));
         items.add(new EntryItem("Change Kerberos Id", userSettings.getString(PrintAtMITActivity.USERNAME, ""), ITEM_USERNAME));
         
@@ -66,9 +57,49 @@ public class SettingsActivity extends ListActivity {
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenuInfo menuInfo) {
       super.onCreateContextMenu(menu, v, menuInfo);
-      menu.setHeaderTitle("Change Kerberos Id");
+      menu.setHeaderTitle("Ink Color Settings");
       MenuInflater inflater = getMenuInflater();
-      inflater.inflate(R.menu.username_menu, menu);
+      inflater.inflate(R.menu.inkcolor_menu, menu);
+      //checks the correct option based on saved user preference
+      //default is black and white
+	    SharedPreferences userSettings = getSharedPreferences(PrintAtMITActivity.PREFS_NAME, MODE_PRIVATE);
+	    String color = userSettings.getString(PrintAtMITActivity.INKCOLOR, PrintAtMITActivity.BLACKWHITE);
+	    if (color.equals(PrintAtMITActivity.COLOR)) {
+	    	MenuItem item = (MenuItem) menu.findItem(R.id.color);
+	    	item.setChecked(true);
+	    }
+	    else {
+	    	MenuItem item = (MenuItem) menu.findItem(R.id.bw);
+	    	item.setChecked(true);
+	    }
+    }
+    
+    @Override
+    public boolean onContextItemSelected(MenuItem item)
+    {
+    	SharedPreferences userSettings = getSharedPreferences(PrintAtMITActivity.PREFS_NAME, MODE_PRIVATE);
+    	SharedPreferences.Editor editor = userSettings.edit();
+    	EntryAdapter adapter;
+    	//changes user preference based on what user has selected
+       switch(item.getItemId())
+       {
+       case R.id.bw:
+    	   editor.putString(PrintAtMITActivity.INKCOLOR, PrintAtMITActivity.BLACKWHITE);
+    	   items.set(ITEM_INKCOLOR, new EntryItem("Ink Color", PrintAtMITActivity.BLACKWHITE, ITEM_INKCOLOR));
+    	   editor.commit();
+           adapter = new EntryAdapter(this, items);
+           setListAdapter(adapter);
+          return true;
+       case R.id.color:
+          editor.putString(PrintAtMITActivity.INKCOLOR, PrintAtMITActivity.COLOR);
+          items.set(ITEM_INKCOLOR, new EntryItem("Ink Color", PrintAtMITActivity.COLOR, ITEM_INKCOLOR));
+          editor.commit();
+          adapter = new EntryAdapter(this, items);
+          setListAdapter(adapter);
+          return true;
+       default:
+          return super.onContextItemSelected(item);
+       }
     }
     
     @Override
@@ -76,12 +107,13 @@ public class SettingsActivity extends ListActivity {
     	
     	if(!items.get(position).isSection()){
     		
-    		//EntryItem item = (EntryItem)items.get(position);
     		switch(position) {
+    		//popup dialog appears for username
+    		//saves user-inputted username
     		case ITEM_USERNAME:
     			final Dialog dialog = new Dialog(this);
 
-    			dialog.setContentView(R.menu.username_menu);
+    			dialog.setContentView(R.layout.username_dialog);
     			dialog.setTitle("Change Kerberos Id");
     			dialog.show();
     			
@@ -106,7 +138,14 @@ public class SettingsActivity extends ListActivity {
     	        });
     	        
         		return;
-    		case ITEM_INKCOLOR: Toast.makeText(this, "select ink color here", Toast.LENGTH_SHORT).show(); break;
+        	//context menu appears for ink color
+    		case ITEM_INKCOLOR: 
+    			registerForContextMenu( v ); 
+    		    v.setLongClickable(false);  // undo setting of this flag in registerForContextMenu
+    		    
+    		    this.openContextMenu(v);
+    		   
+    			break;
     		case ITEM_COPIES: Toast.makeText(this, "change number of copies here", Toast.LENGTH_SHORT).show(); break;
     		default: Toast.makeText(this, "herp derp", Toast.LENGTH_SHORT).show(); break;
     		}
