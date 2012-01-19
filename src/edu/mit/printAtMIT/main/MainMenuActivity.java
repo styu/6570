@@ -3,6 +3,7 @@ package edu.mit.printAtMIT.main;
 import com.parse.Parse;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -63,6 +64,11 @@ public class MainMenuActivity extends Activity{
         	startActivity(intent);
             return true;
         case R.id.about:
+        	Dialog dialog = new Dialog(this);
+
+			dialog.setContentView(R.layout.about_dialog);
+			dialog.setTitle("About");
+			dialog.show();
             super.onOptionsItemSelected(item);
             return true;
         default:

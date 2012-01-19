@@ -6,10 +6,13 @@ import edu.mit.printAtMIT.R;
 import edu.mit.printAtMIT.PrintAtMITActivity;
 import android.app.Dialog;
 import android.app.ListActivity;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,6 +54,39 @@ public class SettingsActivity extends ListActivity {
         EntryAdapter adapter = new EntryAdapter(this, items);
         
         setListAdapter(adapter);
+    }
+    
+    @Override
+    public void onConfigurationChanged(Configuration newConfig){
+        super.onConfigurationChanged(newConfig);
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.settings_menu, menu);
+        return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+        case R.id.home:
+        	Intent intent = new Intent(findViewById(android.R.id.content).getContext(), MainMenuActivity.class);
+        	startActivity(intent);
+            return true;
+        case R.id.about:
+        	Dialog dialog = new Dialog(this);
+
+			dialog.setContentView(R.layout.about_dialog);
+			dialog.setTitle("About");
+			dialog.show();
+            super.onOptionsItemSelected(item);
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
+        }
     }
     
     @Override
