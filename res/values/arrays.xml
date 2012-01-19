@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="headers">
+        <item>Kerberos Id</item>
+        <item>Printer Preferences</item>
+    </string-array>
+    <string-array name="userinfo">
+        <item>Change Kerberos Id</item>
+    </string-array>
+    <string-array name="printerinfo">
+        <item>Ink Color</item>
+        <item>Copies</item>
+    </string-array>
+</resources>

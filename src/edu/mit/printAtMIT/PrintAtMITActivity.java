@@ -11,6 +11,12 @@ public class PrintAtMITActivity extends Activity {
 	
 	public static final String PREFS_NAME = "user_preferences";
 	public static final String USERNAME = "kerberosId";
+	public static final String INKCOLOR = "inkcolor";
+	public static final String COPIES = "copies";
+	
+	public static final String BLACKWHITE = "Black and White";
+	public static final String COLOR = "Color";
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {

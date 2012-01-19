@@ -5,4 +5,11 @@
     <string name="app_name">print@mit</string>
 	<string name="setting">Settings</string>
 	<string name="about">About</string>
+	<string name="header_username">Username</string>
+	<string name="header_printer">Printer Preferences</string>
+	<string name="username">Change username</string>
+	<string name="printer_color">Ink Color</string>
+	<string name="printer_copies">Copies</string>
+	<string name="red">red</string>
+	<string name="blue">blue</string>
 </resources>

@@ -11,6 +11,8 @@
               android:layout_height="wrap_content" 
               android:background="@android:drawable/editbox_background"
               android:layout_centerVertical="true"
+              android:inputType="text"
+              android:imeOptions="actionDone"
                />
     
    	<TextView android:id="@+id/label" 
