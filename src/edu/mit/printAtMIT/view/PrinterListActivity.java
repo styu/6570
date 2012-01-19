@@ -3,27 +3,25 @@ package edu.mit.printAtMIT.view;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.Toast;
 
-import com.parse.FindCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import edu.mit.printAtMIT.R;
-import edu.mit.printAtMIT.print.PrintOptionsActivity;
 
 /**
  * Lists all the printers from database. Shows name, location, status from each
@@ -35,7 +33,6 @@ import edu.mit.printAtMIT.print.PrintOptionsActivity;
  */
 
 public class PrinterListActivity extends ListActivity {
-    private final List<String> mPrinterList = new ArrayList<String>();
     private final List<ParseObject> mPrinters = new ArrayList<ParseObject>();
 
     @Override
@@ -49,63 +46,26 @@ public class PrinterListActivity extends ListActivity {
 //        Button button01 = (Button) findViewById(R.id.button01);
 //        Button button02 = (Button) findViewById(R.id.button02);
 
-        Log.i("printerlist", "creating ParseQuery PrintersData");
+        ConnectivityManager connManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
-        ParseQuery query = new ParseQuery("PrintersData");
-        Log.i("printerlist", "created ParseQuery PrintersData");
-        try {
-            List<ParseObject> objects = query.find();
-            for (ParseObject o : objects) {
-                StringBuilder sb = new StringBuilder();
-                sb.append(o.getString("printerName") + "\t\t");
-                sb.append(o.getString("location") + "\t\t");
-                sb.append(o.getString("status") + "");
-                Log.i("PRINTERLIST", "added " + sb.toString());
-                mPrinterList.add(sb.toString());
-                mPrinters.add(o);
-            }
-        } catch (ParseException e1) {
-            Log.e("printerList", "query.find() FAILED");
+        if (!mWifi.isConnected()) {
+            Toast.makeText(getApplicationContext(), "Network error", Toast.LENGTH_SHORT).show();
         }
-//        query.findInBackground(new FindCallback() {
-//            public void done(List<ParseObject> objects, ParseException e) {
-//                if (e == null) {
-//                    for (ParseObject o : objects) {
-//                        StringBuilder sb = new StringBuilder();
-//                        sb.append(o.getString("printerName") + "\t");
-//                        sb.append(o.getString("location") + "\t");
-//                        sb.append(o.getInt("status"));
-//                        Log.i("PRINTERLIST", "added " + sb.toString());
-//                        printerList.add(sb.toString());
-//                    }
-//                        
-//                } else {
-//                    Log.i("PRINTERLIST", "object retreival SUCCESS =DDDD");
-//                        
-//                }
-//            }
-//     
-//        });
-        
-//        StringBuilder test = new StringBuilder("Data should follow: " + mPrinterList.size());
-//        for (String s: mPrinterList) {
-//            test.append(s);
-//        }
-        String[] list = new String[mPrinterList.size()];
+        else {
+            setPrinterList();
+        }
         String[] printerList = new String[mPrinters.size()];
-        for (int i=0; i < mPrinterList.size(); i++) {
-            list[i] = mPrinterList.get(i);
+        
+        //creates the text for each list item
+        //TODO: ADD UI
+        for (int i=0; i < mPrinters.size(); i++) {
             ParseObject printer = mPrinters.get(i);
             printerList[i] = printer.getString("printerName") + "\t\t" + printer.getString("location") + "\t\t" + printer.getString("status");
         }
         
-//        TextView data = (TextView) findViewById(R.id.test);
-//        data.setText(test.toString());
-        
         setListAdapter(new ArrayAdapter<String>(this, R.layout.list_item, printerList));
-        Log.i("printerList", new Integer(list.length).toString());
         ListView lv = getListView();
-        Log.i("printerList", lv.toString());
         lv.setTextFilterEnabled(true);
 
         lv.setOnItemClickListener(new OnItemClickListener() {
@@ -135,5 +95,20 @@ public class PrinterListActivity extends ListActivity {
 //                startActivity(intent);
 //            }
 //        });
+    }
+    
+    private void setPrinterList() {
+        Log.i("printerlist", "creating ParseQuery PrintersData");
+        ParseQuery query = new ParseQuery("PrintersData");
+        Log.i("printerlist", "created ParseQuery PrintersData");
+        try {
+            List<ParseObject> objects = query.find();
+            for (ParseObject o : objects) {
+                mPrinters.add(o);
+            }
+        } catch (ParseException e1) {
+            Log.e("printerList", "query.find() FAILED");
+        }
+
     }
 }
