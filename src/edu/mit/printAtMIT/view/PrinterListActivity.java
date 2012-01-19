@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -21,6 +23,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import edu.mit.printAtMIT.R;
+import edu.mit.printAtMIT.print.PrintOptionsActivity;
 
 /**
  * Lists all the printers from database. Shows name, location, status from each
@@ -96,6 +99,17 @@ public class PrinterListActivity extends ListActivity {
         Log.i("printerList", lv.toString());
         lv.setTextFilterEnabled(true);
 
+        lv.setOnItemClickListener(new OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position,
+                    long id) {
+                // TODO Auto-generated method stub
+                Intent intent = new Intent(view.getContext(), PrinterInfoActivity.class);
+                startActivity(intent);
+            }
+            
+        });
 //        button01.setOnClickListener(new View.OnClickListener() {
 //
 //            public void onClick(View view) {
