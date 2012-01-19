@@ -30,17 +30,22 @@ import edu.mit.printAtMIT.print.PrintOptionsActivity;
  * printer List of favorite printers on top, then list of all printers
  * 
  * Menu Item: Settings About Home Refresh
+ * 
+ * Context Menu Items: Favorite, Info, MapView
  */
 
 public class PrinterListActivity extends ListActivity {
     private final List<String> mPrinterList = new ArrayList<String>();
-    
+    private final List<ParseObject> mPrinters = new ArrayList<ParseObject>();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Parse.initialize(this, "KIb9mNtPKDtkDk7FJ9W6b7MiAr925a10vNuCPRer",
                 "dSFuQYQXSvslh9UdznzzS9Vb0kDgcKnfzgglLUHT");
 //        setContentView(R.layout.printer_list);
+        
+        //TODO: button for full map view
 //        Button button01 = (Button) findViewById(R.id.button01);
 //        Button button02 = (Button) findViewById(R.id.button02);
 
@@ -57,6 +62,7 @@ public class PrinterListActivity extends ListActivity {
                 sb.append(o.getString("status") + "");
                 Log.i("PRINTERLIST", "added " + sb.toString());
                 mPrinterList.add(sb.toString());
+                mPrinters.add(o);
             }
         } catch (ParseException e1) {
             Log.e("printerList", "query.find() FAILED");
@@ -86,14 +92,17 @@ public class PrinterListActivity extends ListActivity {
 //            test.append(s);
 //        }
         String[] list = new String[mPrinterList.size()];
+        String[] printerList = new String[mPrinters.size()];
         for (int i=0; i < mPrinterList.size(); i++) {
             list[i] = mPrinterList.get(i);
+            ParseObject printer = mPrinters.get(i);
+            printerList[i] = printer.getString("printerName") + "\t\t" + printer.getString("location") + "\t\t" + printer.getString("status");
         }
         
 //        TextView data = (TextView) findViewById(R.id.test);
 //        data.setText(test.toString());
         
-        setListAdapter(new ArrayAdapter<String>(this, R.layout.list_item, list));
+        setListAdapter(new ArrayAdapter<String>(this, R.layout.list_item, printerList));
         Log.i("printerList", new Integer(list.length).toString());
         ListView lv = getListView();
         Log.i("printerList", lv.toString());
@@ -106,6 +115,7 @@ public class PrinterListActivity extends ListActivity {
                     long id) {
                 // TODO Auto-generated method stub
                 Intent intent = new Intent(view.getContext(), PrinterInfoActivity.class);
+                intent.putExtra("id", mPrinters.get(position).getObjectId());
                 startActivity(intent);
             }
             
@@ -126,5 +136,4 @@ public class PrinterListActivity extends ListActivity {
 //            }
 //        });
     }
-
 }
