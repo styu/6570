@@ -10,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 import edu.mit.printAtMIT.R;
 
@@ -53,7 +52,7 @@ public class PrintDownloadsActivity extends FileViewActivity {
         	  String fileName = files.list()[position];
         	  
         	  // Must be correct format
-        	  if (fileName.endsWith(".pdf") || fileName.endsWith(".ps")) {
+        	  if (fileName.endsWith(".pdf") || fileName.endsWith(".ps") || fileName.endsWith(".txt")) {
         		  Intent intent = new Intent(view.getContext(), PrintOptionsActivity.class);
         		  intent.putExtra("fileLoc", files.listFiles()[position].toString());
         		  intent.putExtra("fileName", fileName);

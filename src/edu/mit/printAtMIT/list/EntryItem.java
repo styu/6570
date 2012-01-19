@@ -13,7 +13,6 @@ public class EntryItem implements Item{
 		this.id = id;
 	}
 	
-	@Override
 	public boolean isSection() {
 		return false;
 	}

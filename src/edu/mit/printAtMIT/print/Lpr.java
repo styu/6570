@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.BindException;
-import java.net.InetAddress;
 import java.net.Socket;
 
 import android.util.Log;
@@ -101,14 +100,6 @@ public class Lpr {
 
     /**
      * Print a file to a network host or printer
-     * @see #printFile(String , String , String , String )
-     */	
-//    public void printFile(String fileName, String hostName, String printerName)
-//	    throws IOException, InterruptedException {
-//	printFile(fileName, hostName, printerName, fileName);
-//    }
-    /**
-     * Print a file to a network host or printer
      * @param fileName The path to the file to be printed
      * @param hostName The host name or IP address of the print server
      * @param printerName The name of the remote queue or the port on the print server
@@ -145,6 +136,8 @@ public class Lpr {
 	controlFile += "H" + hostName + "\n";
 	controlFile += "P" + userName + "\n";
 	controlFile += ((printRaw) ? "o":"p") +"dfA" + strJobNumber + hostName + "\n";
+	//controlFile += "ldfA" + strJobNumber + hostName + "\n";
+	//controlFile += "p" + documentName + "\n";
 	controlFile += "UdfA" + strJobNumber + hostName + "\n";
 	controlFile += "N" + documentName + "\n";
 
