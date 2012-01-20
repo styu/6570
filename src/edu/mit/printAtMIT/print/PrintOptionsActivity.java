@@ -3,13 +3,9 @@ package edu.mit.printAtMIT.print;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-<<<<<<< HEAD
-
-=======
 import edu.mit.printAtMIT.list.*;
 import android.app.Activity;
 import android.app.Dialog;
->>>>>>> d93d85d6374f345d3ba5bb8f14a009999e9f52d4
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
@@ -30,10 +26,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import edu.mit.printAtMIT.PrintAtMITActivity;
 import edu.mit.printAtMIT.R;
-import edu.mit.printAtMIT.list.EntryAdapter;
-import edu.mit.printAtMIT.list.EntryItem;
-import edu.mit.printAtMIT.list.Item;
-import edu.mit.printAtMIT.list.SectionItem;
 
 /**
  * User selects print options:
@@ -53,19 +45,9 @@ public class PrintOptionsActivity extends ListActivity {
     String queue;
     String userName;
     
-<<<<<<< HEAD
-    //Button btnStart;
-    //TextView textStatus;
-=======
     public static Button btnStart;
     TextView textStatus;
->>>>>>> d93d85d6374f345d3ba5bb8f14a009999e9f52d4
     
-	ArrayList<Item> items = new ArrayList<Item>();
-	private static final int ITEM_USERNAME = 1;
-	private static final int ITEM_INKCOLOR = 3;
-	private static final int ITEM_COPIES = 4;
-	
     final String hostName = "mitprint.mit.edu";
 
     ArrayList<Item> items = new ArrayList<Item>();
@@ -73,29 +55,18 @@ public class PrintOptionsActivity extends ListActivity {
 	private static final int ITEM_INKCOLOR = 3;
 	private static final int ITEM_COPIES = 4;
 	private static final int ITEM_PRINT_BUTTON = 5;
-	
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-<<<<<<< HEAD
-        //setContentView(R.layout.print_options);
-        //btnStart = (Button)findViewById(R.id.button01);
-=======
->>>>>>> d93d85d6374f345d3ba5bb8f14a009999e9f52d4
         
         //setContentView(R.layout.print_options);
         // Show file chosen -- need to add options (bw/color, copies, change print name), then print
         Bundle extras = getIntent().getExtras(); 
-        Log.d("INTENT", extras.toString());
         fileLoc = extras.getString("fileLoc");
         fileName = extras.getString("fileName");
-<<<<<<< HEAD
-
-        Toast.makeText(getApplicationContext(), fileLoc, Toast.LENGTH_SHORT).show();
-=======
         //fileName = "d test";
         //Toast.makeText(getApplicationContext(), fileLoc, Toast.LENGTH_SHORT).show();
->>>>>>> d93d85d6374f345d3ba5bb8f14a009999e9f52d4
         //Toast.makeText(getApplicationContext(), fileName, Toast.LENGTH_SHORT).show();
         
         //SharedPreferences userSettings = getSharedPreferences(PrintAtMITActivity.PREFS_NAME, MODE_PRIVATE);
@@ -104,18 +75,6 @@ public class PrintOptionsActivity extends ListActivity {
         
         //Toast.makeText(getApplicationContext(), fileLoc + userName + hostName + queue, Toast.LENGTH_SHORT).show();
 
-<<<<<<< HEAD
-        //btnStart.setOnClickListener(btnStartListener);
-        //textStatus = (TextView)findViewById(R.id.textStatus);
-        
-        //items.add(new SectionItem("User info"));
-        items.add(new EntryItem("Kerberos Id", userSettings.getString(PrintAtMITActivity.USERNAME, ""), ITEM_USERNAME));
-        
-        //items.add(new SectionItem("Printer Preferences"));
-        items.add(new EntryItem("Ink Color", userSettings.getString(PrintAtMITActivity.INKCOLOR, PrintAtMITActivity.BLACKWHITE), ITEM_INKCOLOR));
-        items.add(new EntryItem("Copies", ""+userSettings.getInt(PrintAtMITActivity.COPIES, 1), ITEM_COPIES));
-        
-=======
         
         
         SharedPreferences userSettings = getSharedPreferences(PrintAtMITActivity.PREFS_NAME, MODE_PRIVATE);
@@ -132,14 +91,10 @@ public class PrintOptionsActivity extends ListActivity {
         
         items.add(new ButtonItem("Print", ITEM_PRINT_BUTTON));
         //items.add(new EntryItem("Print", "", ITEM_PRINT_BUTTON));
->>>>>>> d93d85d6374f345d3ba5bb8f14a009999e9f52d4
         EntryAdapter adapter = new EntryAdapter(this, items);
         
         setListAdapter(adapter);
         
-<<<<<<< HEAD
-        
-=======
         //this.getLayoutInflater().inflate(R.layout.print_options, getListView());
         
         //btnStart = (Button) (this.getListView(). findViewById(R.id.printbutton));
@@ -234,7 +189,6 @@ public class PrintOptionsActivity extends ListActivity {
     	}
     	
     	super.onListItemClick(l, v, position, id);
->>>>>>> d93d85d6374f345d3ba5bb8f14a009999e9f52d4
     }
     
     private OnClickListener btnStartListener = new View.OnClickListener() {
@@ -288,11 +242,11 @@ public class PrintOptionsActivity extends ListActivity {
             if (result) {
                 Toast.makeText(getApplicationContext(), "Error sending, try again", Toast.LENGTH_SHORT).show();
                 Log.i("AsyncTask", "onPostExecute: Completed with an Error.");
-                //textStatus.setText("There was a connection error.");
+                textStatus.setText("There was a connection error.");
             } else {
                 Toast.makeText(getApplicationContext(), "Successfully sent", Toast.LENGTH_SHORT).show();
                 Log.i("AsyncTask", "onPostExecute: Completed.");
-                //textStatus.setText("task completed. successful!");
+                textStatus.setText("task completed. successful!");
             }
             //btnStart.setVisibility(View.VISIBLE);
         }
