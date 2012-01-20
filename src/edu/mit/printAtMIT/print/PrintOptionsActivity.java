@@ -46,7 +46,6 @@ public class PrintOptionsActivity extends ListActivity {
     String userName;
     
     public static Button btnStart;
-    TextView textStatus;
     
     final String hostName = "mitprint.mit.edu";
 
@@ -55,7 +54,7 @@ public class PrintOptionsActivity extends ListActivity {
 	private static final int ITEM_INKCOLOR = 3;
 	private static final int ITEM_COPIES = 4;
 	private static final int ITEM_PRINT_BUTTON = 5;
-	
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,19 +64,18 @@ public class PrintOptionsActivity extends ListActivity {
         Bundle extras = getIntent().getExtras(); 
         fileLoc = extras.getString("fileLoc");
         fileName = extras.getString("fileName");
-        //fileName = "d test";
         //Toast.makeText(getApplicationContext(), fileLoc, Toast.LENGTH_SHORT).show();
         //Toast.makeText(getApplicationContext(), fileName, Toast.LENGTH_SHORT).show();
         
-        //SharedPreferences userSettings = getSharedPreferences(PrintAtMITActivity.PREFS_NAME, MODE_PRIVATE);
-        //userName = userSettings.getString(PrintAtMITActivity.USERNAME, "");
-        //queue = "bw";
-        
+        SharedPreferences userSettings = getSharedPreferences(PrintAtMITActivity.PREFS_NAME, MODE_PRIVATE);
+        userName = userSettings.getString(PrintAtMITActivity.USERNAME, "");
+        if (userSettings.getString(PrintAtMITActivity.INKCOLOR, PrintAtMITActivity.BLACKWHITE).equals("Color"))
+        	queue = "color";
+        else
+        	queue = "bw";
         //Toast.makeText(getApplicationContext(), fileLoc + userName + hostName + queue, Toast.LENGTH_SHORT).show();
 
         
-        
-        SharedPreferences userSettings = getSharedPreferences(PrintAtMITActivity.PREFS_NAME, MODE_PRIVATE);
         /*TextView text = (TextView) findViewById(R.id.list_item_entry_title);
         text.setText(fileName);
         TextView text2 = (TextView) findViewById(R.id.list_item_entry_summary);
@@ -135,6 +133,7 @@ public class PrintOptionsActivity extends ListActivity {
        switch(item.getItemId())
        {
        case R.id.bw:
+    	   queue = "bw";
     	   editor.putString(PrintAtMITActivity.INKCOLOR, PrintAtMITActivity.BLACKWHITE);
     	   items.set(ITEM_INKCOLOR, new EntryItem("Ink Color", PrintAtMITActivity.BLACKWHITE, ITEM_INKCOLOR));
     	   editor.commit();
@@ -142,6 +141,7 @@ public class PrintOptionsActivity extends ListActivity {
            setListAdapter(adapter);
           return true;
        case R.id.color:
+    	  queue = "color";
           editor.putString(PrintAtMITActivity.INKCOLOR, PrintAtMITActivity.COLOR);
           items.set(ITEM_INKCOLOR, new EntryItem("Ink Color", PrintAtMITActivity.COLOR, ITEM_INKCOLOR));
           editor.commit();
@@ -215,7 +215,6 @@ public class PrintOptionsActivity extends ListActivity {
             Lpr lpr = new Lpr();
             try {
             	File f = new File(fileLoc);
-            	//Log.d("LPR", "file: " + f.toString());
                 lpr.printFile(f, userName, hostName, queue, fileName);
             } catch (IOException e) {
                 // TODO Auto-generated catch block
@@ -242,11 +241,9 @@ public class PrintOptionsActivity extends ListActivity {
             if (result) {
                 Toast.makeText(getApplicationContext(), "Error sending, try again", Toast.LENGTH_SHORT).show();
                 Log.i("AsyncTask", "onPostExecute: Completed with an Error.");
-                textStatus.setText("There was a connection error.");
             } else {
                 Toast.makeText(getApplicationContext(), "Successfully sent", Toast.LENGTH_SHORT).show();
                 Log.i("AsyncTask", "onPostExecute: Completed.");
-                textStatus.setText("task completed. successful!");
             }
             //btnStart.setVisibility(View.VISIBLE);
         }
