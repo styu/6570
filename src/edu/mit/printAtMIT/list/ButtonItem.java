@@ -1,15 +1,13 @@
 package edu.mit.printAtMIT.list;
 
 
-public class EntryItem implements Item{
+public class ButtonItem implements Item{
 
 	public final String title;
-	public final String subtitle;
 	public final int id;
 
-	public EntryItem(String title, String subtitle, int id) {
+	public ButtonItem(String title,  int id) {
 		this.title = title;
-		this.subtitle = subtitle;
 		this.id = id;
 	}
 	
@@ -18,7 +16,7 @@ public class EntryItem implements Item{
 	}
 	
 	public boolean isButton() {
-		return false;
+		return true;
 	}
 
 }
