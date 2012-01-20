@@ -44,15 +44,8 @@ public class PrinterListActivity extends ListActivity {
         setContentView(R.layout.printer_list);
         Button button01 = (Button) findViewById(R.id.button01);
 
-        ConnectivityManager connManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-
-        if (!mWifi.isConnected()) {
-            Toast.makeText(getApplicationContext(), "Network error", Toast.LENGTH_SHORT).show();
-        }
-        else {
-            setPrinterList();
-        }
+        setPrinterList();
+        
         String[] printerList = new String[mPrinters.size()];
         
         //creates the text for each list item
