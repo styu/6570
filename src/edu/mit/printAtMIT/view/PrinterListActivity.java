@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -40,11 +41,8 @@ public class PrinterListActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         Parse.initialize(this, "KIb9mNtPKDtkDk7FJ9W6b7MiAr925a10vNuCPRer",
                 "dSFuQYQXSvslh9UdznzzS9Vb0kDgcKnfzgglLUHT");
-//        setContentView(R.layout.printer_list);
-        
-        //TODO: button for full map view
-//        Button button01 = (Button) findViewById(R.id.button01);
-//        Button button02 = (Button) findViewById(R.id.button02);
+        setContentView(R.layout.printer_list);
+        Button button01 = (Button) findViewById(R.id.button01);
 
         ConnectivityManager connManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
@@ -79,21 +77,14 @@ public class PrinterListActivity extends ListActivity {
             }
             
         });
-//        button01.setOnClickListener(new View.OnClickListener() {
-//
-//            public void onClick(View view) {
-//                Intent intent = new Intent(view.getContext(), PrinterMapActivity.class);
-//                startActivity(intent);
-//            }
-//        });
-//        button02.setOnClickListener(new View.OnClickListener() {
-//
-//            public void onClick(View view) {
-//                Intent intent = new Intent(view.getContext(),
-//                        PrinterInfoActivity.class);
-//                startActivity(intent);
-//            }
-//        });
+        button01.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), PrinterMapActivity.class);
+                intent.putExtra("allPrinterView", true);
+                startActivity(intent);
+            }
+        });
     }
     
     private void setPrinterList() {
