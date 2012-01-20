@@ -70,7 +70,6 @@ public class PrinterListActivity extends ListActivity {
 
         lv.setOnItemClickListener(new OnItemClickListener() {
 
-            @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,
                     long id) {
                 // TODO Auto-generated method stub

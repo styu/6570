@@ -12,18 +12,25 @@
     android:layout_marginRight="10dip"
     android:layout_marginBottom="30dip"
     android:background="@android:color/white" />
-    <TextView
+   	
+    <TextView 
 	   android:id="@+id/change_username"
 	   android:layout_width="fill_parent"
 	   android:layout_height="wrap_content"
 	   android:layout_centerHorizontal="true"
 	   android:layout_marginBottom="10dp"
-	   android:scrollHorizontally="false"
-	   android:ellipsize="none"
-	   android:inputType="textMultiLine"
-	   android:singleLine="false"
-	   android:text="Some blurb about this app. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+	   android:text="Do you want to print this file?"
 	   />
+
+    <Button
+        android:id="@+id/yes_print"
+        android:layout_weight="1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:text="Yes" />
 
     
 </LinearLayout>

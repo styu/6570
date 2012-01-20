@@ -46,11 +46,11 @@ public class PrintOptionsActivity extends Activity {
         setContentView(R.layout.print_options);
         btnStart = (Button)findViewById(R.id.button01);
         
-        // Show file chosen -- need to add options, then print
+        // Show file chosen -- need to add options (bw/color, copies, change print name), then print
         Bundle extras = getIntent().getExtras(); 
         fileLoc = extras.getString("fileLoc");
         fileName = extras.getString("fileName");
-        
+        //fileName = "d test";
         Toast.makeText(getApplicationContext(), fileLoc, Toast.LENGTH_SHORT).show();
         //Toast.makeText(getApplicationContext(), fileName, Toast.LENGTH_SHORT).show();
         
@@ -73,9 +73,13 @@ public class PrintOptionsActivity extends Activity {
     };
     
     public class PrintTask extends AsyncTask<Void, byte[], Boolean> {
+    	private ProgressDialog dialog;
+
         @Override
         protected void onPreExecute() {
             Log.i("AsyncTask", "onPreExecute");
+            dialog = ProgressDialog.show(PrintOptionsActivity.this, "", 
+                    "Sending print job", true);
         }
 
         @Override
@@ -84,8 +88,7 @@ public class PrintOptionsActivity extends Activity {
             Lpr lpr = new Lpr();
             try {
             	File f = new File(fileLoc);
-
-            	Log.d("LPR", "file: " + f.toString());
+            	//Log.d("LPR", "file: " + f.toString());
                 lpr.printFile(f, userName, hostName, queue, fileName);
             } catch (IOException e) {
                 // TODO Auto-generated catch block
@@ -104,24 +107,21 @@ public class PrintOptionsActivity extends Activity {
         @Override
         protected void onCancelled() {
             Log.i("AsyncTask", "Cancelled.");
-            //btnStart.setVisibility(View.VISIBLE);
+            btnStart.setVisibility(View.VISIBLE);
         }
         @Override
         protected void onPostExecute(Boolean result) {
+        	dialog.dismiss();
             if (result) {
+                Toast.makeText(getApplicationContext(), "Error sending, try again", Toast.LENGTH_SHORT).show();
                 Log.i("AsyncTask", "onPostExecute: Completed with an Error.");
                 textStatus.setText("There was a connection error.");
             } else {
+                Toast.makeText(getApplicationContext(), "Successfully sent", Toast.LENGTH_SHORT).show();
                 Log.i("AsyncTask", "onPostExecute: Completed.");
                 textStatus.setText("task completed. successful!");
             }
             btnStart.setVisibility(View.VISIBLE);
         }
     }
-
-/*    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        //printTask.cancel(true); //In case the task is currently running
-    }*/
 }

@@ -177,29 +177,16 @@ public class SettingsActivity extends ListActivity {
         	//context menu appears for ink color
     		case ITEM_INKCOLOR: 
     			registerForContextMenu( v ); 
-    		    v.setLongClickable(false);  // undo setting of this flag in registerForContextMenu
-    		    
+    		    v.setLongClickable(false); 
     		    this.openContextMenu(v);
     		   
     			break;
     		case ITEM_COPIES: Toast.makeText(this, "change number of copies here", Toast.LENGTH_SHORT).show(); break;
     		default: Toast.makeText(this, "herp derp", Toast.LENGTH_SHORT).show(); break;
     		}
-    		//Toast.makeText(this, "You clicked " + item.title , Toast.LENGTH_SHORT).show();
-
     		
     	}
     	
     	super.onListItemClick(l, v, position, id);
     }
-        /*
-        Button button01 = (Button) findViewById(R.id.button01);
-        button01.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View view) {
-            	Intent intent = new Intent(view.getContext(), PrintMenuActivity.class);
-            	intent.putExtra("activity", "mainmenu");
-            	startActivity(intent);
-            }
-        });*/
 }

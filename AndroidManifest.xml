@@ -25,9 +25,11 @@
             android:configChanges="keyboardHidden|orientation"></activity>
         <activity android:name=".main.SettingsActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:title="User Preferences"></activity>
-        <activity android:name=".print.PrintDownloadsActivity"></activity>
-        <activity android:name=".print.PrintMenuActivity"></activity>
+            android:label="User Preferences"></activity>
+        <activity android:name=".print.PrintDownloadsActivity"
+            android:label="Select File"></activity>
+        <activity android:name=".print.PrintMenuActivity"
+            android:label="Print files"></activity>
         <activity android:name=".print.PrintOptionsActivity"></activity>
         
         <activity android:name=".view.PrinterMapActivity" android:launchMode="singleTop"  android:process="map.test">
