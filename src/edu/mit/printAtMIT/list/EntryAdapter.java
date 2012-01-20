@@ -3,12 +3,16 @@ package edu.mit.printAtMIT.list;
 import java.util.ArrayList;
 
 import edu.mit.printAtMIT.R;
+import edu.mit.printAtMIT.print.PrintMenuActivity;
+import edu.mit.printAtMIT.print.PrintOptionsActivity.PrintTask;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class EntryAdapter extends ArrayAdapter<Item> {
@@ -41,7 +45,7 @@ public class EntryAdapter extends ArrayAdapter<Item> {
 				
 				final TextView sectionView = (TextView) v.findViewById(R.id.list_item_section_text);
 				sectionView.setText(si.getTitle());
-			}else{
+			}else if (!i.isButton()){
 				EntryItem ei = (EntryItem)i;
 				v = vi.inflate(R.layout.list_item_entry, null);
 				final TextView title = (TextView)v.findViewById(R.id.list_item_entry_title);
@@ -52,8 +56,20 @@ public class EntryAdapter extends ArrayAdapter<Item> {
 				if(subtitle != null)
 					subtitle.setText(ei.subtitle);
 			}
+			else {
+				ButtonItem bi = (ButtonItem)i;
+				
+				v = vi.inflate(R.layout.print_options, null);
+				TextView printButton = (TextView)v.findViewById(R.id.print_button);
+				
+				if (printButton != null) {
+					printButton.setText(bi.title);
+				}
+			}
 		}
 		return v;
 	}
+	
+	
 
 }
