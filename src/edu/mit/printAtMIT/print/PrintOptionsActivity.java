@@ -2,8 +2,9 @@ package edu.mit.printAtMIT.print;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
-import android.app.Activity;
+import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -16,6 +17,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import edu.mit.printAtMIT.PrintAtMITActivity;
 import edu.mit.printAtMIT.R;
+import edu.mit.printAtMIT.list.EntryAdapter;
+import edu.mit.printAtMIT.list.EntryItem;
+import edu.mit.printAtMIT.list.Item;
+import edu.mit.printAtMIT.list.SectionItem;
 
 /**
  * User selects print options:
@@ -28,29 +33,35 @@ import edu.mit.printAtMIT.R;
  *      About     
  */
 
-public class PrintOptionsActivity extends Activity {
+public class PrintOptionsActivity extends ListActivity {
     PrintTask printTask;
     String fileLoc;
     String fileName;
     String queue;
     String userName;
     
-    Button btnStart;
-    TextView textStatus;
+    //Button btnStart;
+    //TextView textStatus;
     
+	ArrayList<Item> items = new ArrayList<Item>();
+	private static final int ITEM_USERNAME = 1;
+	private static final int ITEM_INKCOLOR = 3;
+	private static final int ITEM_COPIES = 4;
+	
     final String hostName = "mitprint.mit.edu";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.print_options);
-        btnStart = (Button)findViewById(R.id.button01);
+        //setContentView(R.layout.print_options);
+        //btnStart = (Button)findViewById(R.id.button01);
         
         // Show file chosen -- need to add options (bw/color, copies, change print name), then print
         Bundle extras = getIntent().getExtras(); 
+        Log.d("INTENT", extras.toString());
         fileLoc = extras.getString("fileLoc");
         fileName = extras.getString("fileName");
-        //fileName = "d test";
+
         Toast.makeText(getApplicationContext(), fileLoc, Toast.LENGTH_SHORT).show();
         //Toast.makeText(getApplicationContext(), fileName, Toast.LENGTH_SHORT).show();
         
@@ -60,13 +71,26 @@ public class PrintOptionsActivity extends Activity {
         
         //Toast.makeText(getApplicationContext(), fileLoc + userName + hostName + queue, Toast.LENGTH_SHORT).show();
 
-        btnStart.setOnClickListener(btnStartListener);
-        textStatus = (TextView)findViewById(R.id.textStatus);
+        //btnStart.setOnClickListener(btnStartListener);
+        //textStatus = (TextView)findViewById(R.id.textStatus);
+        
+        //items.add(new SectionItem("User info"));
+        items.add(new EntryItem("Kerberos Id", userSettings.getString(PrintAtMITActivity.USERNAME, ""), ITEM_USERNAME));
+        
+        //items.add(new SectionItem("Printer Preferences"));
+        items.add(new EntryItem("Ink Color", userSettings.getString(PrintAtMITActivity.INKCOLOR, PrintAtMITActivity.BLACKWHITE), ITEM_INKCOLOR));
+        items.add(new EntryItem("Copies", ""+userSettings.getInt(PrintAtMITActivity.COPIES, 1), ITEM_COPIES));
+        
+        EntryAdapter adapter = new EntryAdapter(this, items);
+        
+        setListAdapter(adapter);
+        
+        
     }
     
     private OnClickListener btnStartListener = new OnClickListener() {
         public void onClick(View v){
-            btnStart.setVisibility(View.INVISIBLE);
+            //btnStart.setVisibility(View.INVISIBLE);
             printTask = new PrintTask();
             printTask.execute();
         }
@@ -107,7 +131,7 @@ public class PrintOptionsActivity extends Activity {
         @Override
         protected void onCancelled() {
             Log.i("AsyncTask", "Cancelled.");
-            btnStart.setVisibility(View.VISIBLE);
+            //btnStart.setVisibility(View.VISIBLE);
         }
         @Override
         protected void onPostExecute(Boolean result) {
@@ -115,13 +139,13 @@ public class PrintOptionsActivity extends Activity {
             if (result) {
                 Toast.makeText(getApplicationContext(), "Error sending, try again", Toast.LENGTH_SHORT).show();
                 Log.i("AsyncTask", "onPostExecute: Completed with an Error.");
-                textStatus.setText("There was a connection error.");
+                //textStatus.setText("There was a connection error.");
             } else {
                 Toast.makeText(getApplicationContext(), "Successfully sent", Toast.LENGTH_SHORT).show();
                 Log.i("AsyncTask", "onPostExecute: Completed.");
-                textStatus.setText("task completed. successful!");
+                //textStatus.setText("task completed. successful!");
             }
-            btnStart.setVisibility(View.VISIBLE);
+            //btnStart.setVisibility(View.VISIBLE);
         }
     }
 }
