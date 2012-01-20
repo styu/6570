@@ -16,4 +16,7 @@ public class SectionItem implements Item{
 		return true;
 	}
 
+	public boolean isButton() {
+		return false;
+	}
 }
