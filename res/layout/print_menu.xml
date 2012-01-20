@@ -13,20 +13,15 @@ android:layout_centerHorizontal="true" />
     	    android:layout_height="90dp"
     	    android:gravity="center_vertical"
     	    android:layout_toLeftOf="@id/helper1">
-    	    <ImageView 
-				   android:id="@+id/downloads_image"
-				   android:src="@drawable/ic_downloads"
-				   android:layout_width="fill_parent"
-				   android:layout_height="wrap_content"
-				   android:gravity="center_vertical|center_horizontal"
-				   />
-	        <TextView
-	            	android:text="Downloads"
-	            	android:gravity="center_horizontal"
-	            	android:layout_width="fill_parent"
-	            	android:layout_height="wrap_content"
-	            	android:layout_below="@id/downloads_image"
-	            />
+    	    <Button 
+    	        android:background="@android:color/transparent"
+			    android:id="@+id/downloads_image" 
+			    android:layout_width="fill_parent" 
+			    android:layout_height="wrap_content"
+			    android:drawableTop="@drawable/ic_downloads"
+			    android:gravity="center_vertical|center_horizontal"
+			    android:text="Downloads"
+			    android:textColor="@android:color/white"/>
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -34,20 +29,15 @@ android:layout_centerHorizontal="true" />
             android:id="@+id/images"
             android:gravity="center_vertical"
             android:layout_toRightOf="@id/helper1">
-	        <ImageView 
-				   android:id="@+id/images_image"
-				   android:src="@android:drawable/ic_menu_gallery"
-				   android:layout_width="fill_parent"
-				   android:layout_height="wrap_content"
-				   android:gravity="center_vertical|center_horizontal"
-				   />
-	         <TextView
-		            	android:text="Pictures"
-		            	android:gravity="center_horizontal"
-		            	android:layout_width="fill_parent"
-		            	android:layout_height="wrap_content"
-		            	android:layout_below="@id/images_image"
-		            />
+	        <Button 
+    	        android:background="@android:color/transparent"
+			    android:id="@+id/images_image" 
+			    android:layout_width="fill_parent" 
+			    android:layout_height="wrap_content"
+			    android:drawableTop="@android:drawable/ic_menu_gallery"
+			    android:gravity="center_vertical|center_horizontal"
+			    android:text="Images"
+			    android:textColor="@android:color/white"/>
        </RelativeLayout>
        <View android:id="@+id/helper2" 
 android:layout_width="0dp"
@@ -62,20 +52,15 @@ android:layout_centerHorizontal="true" />
     	    android:layout_below="@id/downloads"
     	    android:layout_toLeftOf="@id/helper2"
    >
-	        <ImageView 
-				   android:id="@+id/chats_image"
-				   android:src="@drawable/ic_chat"
-				   android:layout_width="fill_parent"
-				   android:layout_height="wrap_content"
-				   android:gravity="center_vertical|center_horizontal"
-				   />
-	        <TextView
-	            	android:text="Chats"
-	            	android:gravity="center_horizontal"
-	            	android:layout_width="fill_parent"
-	            	android:layout_height="wrap_content"
-	            	android:layout_below="@id/chats_image"
-	            />
+	        <Button 
+    	        android:background="@android:color/transparent"
+			    android:id="@+id/chats_image" 
+			    android:layout_width="fill_parent" 
+			    android:layout_height="wrap_content"
+			    android:drawableTop="@drawable/ic_chat"
+			    android:gravity="center_vertical|center_horizontal"
+			    android:text="Chats"
+			    android:textColor="@android:color/white"/>
         </RelativeLayout>
         <RelativeLayout
             android:layout_weight="0.5"
@@ -85,19 +70,14 @@ android:layout_centerHorizontal="true" />
             android:gravity="center_vertical"
             android:layout_below="@id/images"
             android:layout_toRightOf="@id/helper2">
-	        <ImageView 
-				   android:id="@+id/emails_image"
-				   android:src="@android:drawable/ic_dialog_email"
-				   android:layout_width="fill_parent"
-				   android:layout_height="wrap_content"
-				   android:gravity="center_vertical|center_horizontal"
-				   />
-	         <TextView
-		            	android:text="Emails"
-		            	android:gravity="center_horizontal"
-		            	android:layout_width="fill_parent"
-		            	android:layout_height="wrap_content"
-		            	android:layout_below="@id/emails_image"
-		            />
+	        <Button 
+    	        android:background="@android:color/transparent"
+			    android:id="@+id/emails_image" 
+			    android:layout_width="fill_parent" 
+			    android:layout_height="wrap_content"
+			    android:drawableTop="@android:drawable/ic_dialog_email"
+			    android:gravity="center_vertical|center_horizontal"
+			    android:text="Emails"
+			    android:textColor="@android:color/white"/>
        </RelativeLayout>
 </RelativeLayout>

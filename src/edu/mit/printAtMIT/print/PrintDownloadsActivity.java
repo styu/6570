@@ -2,9 +2,13 @@ package edu.mit.printAtMIT.print;
 
 import java.io.File;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -12,6 +16,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 import edu.mit.printAtMIT.R;
+import edu.mit.printAtMIT.main.MainMenuActivity;
+import edu.mit.printAtMIT.main.SettingsActivity;
 
 /**
  * Lists files from Downloads folder
@@ -63,6 +69,39 @@ public class PrintDownloadsActivity extends FileViewActivity {
         	  }
             }
           });
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.printmenu_menu, menu);
+        return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+    	Intent intent;
+        switch (item.getItemId()) {
+        case R.id.home:
+        	intent = new Intent(findViewById(android.R.id.content).getContext(), MainMenuActivity.class);
+        	startActivity(intent);
+            return true;
+        case R.id.setting:
+        	intent = new Intent(findViewById(android.R.id.content).getContext(), SettingsActivity.class);
+        	startActivity(intent);
+            return true;
+        case R.id.about:
+        	Dialog dialog = new Dialog(this);
+
+			dialog.setContentView(R.layout.about_dialog);
+			dialog.setTitle("About");
+			dialog.show();
+            super.onOptionsItemSelected(item);
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
+        }
     }
     
 }
