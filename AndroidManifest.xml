@@ -26,7 +26,7 @@
             android:configChanges="keyboardHidden|orientation"
             android:label="User Preferences"></activity>
         <activity android:name=".print.PrintDownloadsActivity"
-            android:label="Download files"></activity>
+            android:label="Select File"></activity>
         <activity android:name=".print.PrintMenuActivity"
             android:label="Print files"></activity>
         <activity android:name=".print.PrintOptionsActivity"></activity>
