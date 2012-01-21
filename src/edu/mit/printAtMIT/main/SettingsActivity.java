@@ -4,12 +4,15 @@ import com.parse.Parse;
 
 import edu.mit.printAtMIT.R;
 import edu.mit.printAtMIT.PrintAtMITActivity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -180,7 +183,46 @@ public class SettingsActivity extends ListActivity {
     		    this.openContextMenu(v);
     		   
     			break;
-    		case ITEM_COPIES: Toast.makeText(this, "change number of copies here", Toast.LENGTH_SHORT).show(); break;
+    		case ITEM_COPIES:
+    			final View view = v;
+    			
+    			final SharedPreferences userSettings = getSharedPreferences(PrintAtMITActivity.PREFS_NAME, MODE_PRIVATE);
+      		  	final SharedPreferences.Editor editor = userSettings.edit();
+      		  
+                final EditText copy = new EditText(this);
+                copy.setInputType(InputType.TYPE_CLASS_NUMBER);
+                
+        		AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+        		builder.setMessage("Number of copies:")
+          	         .setCancelable(false)
+          	         .setView(copy)
+          	         .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+          	             public void onClick(DialogInterface dialog, int id) {
+          	            	 
+          	         		 Toast.makeText(getApplicationContext(), copy.getText(), Toast.LENGTH_SHORT).show();
+	        	    		 int copies = userSettings.getInt(PrintAtMITActivity.COPIES, 1);
+	        	    		 String text = copy.getText().toString();
+	        	        	 copies = (text.equals("") || text.equals("0")) ? copies : Integer.parseInt(copy.getText().toString());
+	        	             
+	        	        	 editor.putInt(PrintAtMITActivity.COPIES, copies);
+	        	          	 editor.commit();
+          	       	      
+           	                items.set(ITEM_COPIES, new EntryItem("Copies", "" + copies, ITEM_COPIES));
+
+           	                EntryAdapter adapter = new EntryAdapter(view.getContext(), items);
+           	                setListAdapter(adapter);
+           	                
+           	                dialog.dismiss();
+          	             }
+          	         })
+          	         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+          	             public void onClick(DialogInterface dialog, int id) {
+          	                  dialog.cancel();
+          	             }
+          	         });
+          	  AlertDialog alert = builder.create();
+          	  alert.show();
+          	  break;
     		default: Toast.makeText(this, "herp derp", Toast.LENGTH_SHORT).show(); break;
     		}
     		

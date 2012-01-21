@@ -3,29 +3,34 @@ package edu.mit.printAtMIT.print;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import edu.mit.printAtMIT.list.*;
-import android.app.Activity;
+
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.mit.printAtMIT.PrintAtMITActivity;
 import edu.mit.printAtMIT.R;
+import edu.mit.printAtMIT.list.ButtonItem;
+import edu.mit.printAtMIT.list.EntryAdapter;
+import edu.mit.printAtMIT.list.EntryItem;
+import edu.mit.printAtMIT.list.Item;
+import edu.mit.printAtMIT.list.SectionItem;
 
 /**
  * User selects print options:
@@ -45,7 +50,7 @@ public class PrintOptionsActivity extends ListActivity {
     String queue;
     String userName;
     
-    public static Button btnStart;
+    //public static Button btnStart;
     
     final String hostName = "mitprint.mit.edu";
 
@@ -106,6 +111,7 @@ public class PrintOptionsActivity extends ListActivity {
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenuInfo menuInfo) {
       super.onCreateContextMenu(menu, v, menuInfo);
+      Toast.makeText(this, "" + v.getId(), Toast.LENGTH_SHORT).show();
       menu.setHeaderTitle("Ink Color Settings");
       MenuInflater inflater = getMenuInflater();
       inflater.inflate(R.menu.inkcolor_menu, menu);
@@ -155,14 +161,13 @@ public class PrintOptionsActivity extends ListActivity {
     
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-    	
     	if(!items.get(position).isSection()){
-    		
     		switch(position) {
     		//popup dialog appears for username
     		//saves user-inputted username
     		case ITEM_FILENAME:
     			final Dialog dialog = new Dialog(this);
+        		Toast.makeText(this, v.toString(), Toast.LENGTH_SHORT).show();
 
     			dialog.setContentView(R.layout.about_dialog);
     			dialog.setTitle(fileName);
@@ -173,12 +178,50 @@ public class PrintOptionsActivity extends ListActivity {
         		return;
         	//context menu appears for ink color
     		case ITEM_INKCOLOR: 
+        		Toast.makeText(this, v.toString(), Toast.LENGTH_SHORT).show();
+
     			registerForContextMenu( v ); 
     		    v.setLongClickable(false); 
     		    this.openContextMenu(v);
     		   
     			break;
-    		case ITEM_COPIES: Toast.makeText(this, "change number of copies here", Toast.LENGTH_SHORT).show(); break;
+    		case ITEM_COPIES:
+    			final View view = v;
+
+    			final SharedPreferences userSettings = getSharedPreferences(PrintAtMITActivity.PREFS_NAME, MODE_PRIVATE);
+    		  
+    			final EditText copy = new EditText(this);
+    			copy.setInputType(InputType.TYPE_CLASS_NUMBER);
+              
+    			AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+      		  	builder.setMessage("Number of copies:")
+      		  			.setCancelable(false)
+	        	        .setView(copy)
+	        	        .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+	        	        	public void onClick(DialogInterface dialog, int id) {
+	        	        		Toast.makeText(getApplicationContext(), copy.getText(), Toast.LENGTH_SHORT).show();
+	        	        		
+	        	    			int copies = userSettings.getInt(PrintAtMITActivity.COPIES, 1);
+	        	    			String text = copy.getText().toString();
+	        	        		copies = (text.equals("") || text.equals("0")) ? copies : Integer.parseInt(copy.getText().toString());
+	        	       	      
+	         	                items.set(ITEM_COPIES, new EntryItem("Copies", "" + copies, ITEM_COPIES));
+	
+	         	                EntryAdapter adapter = new EntryAdapter(view.getContext(), items);
+	         	                setListAdapter(adapter);
+	         	                
+	         	                dialog.dismiss();
+	        	             }
+	        	         })
+	        	         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+	        	             public void onClick(DialogInterface dialog, int id) {
+	        	                  dialog.cancel();
+	        	             }
+	        	         });
+      		  	AlertDialog alert = builder.create();
+	        	alert.show();
+	        	break;
+
     		case ITEM_PRINT_BUTTON:
     			printTask = new PrintTask();
                 printTask.execute();
@@ -191,13 +234,13 @@ public class PrintOptionsActivity extends ListActivity {
     	super.onListItemClick(l, v, position, id);
     }
     
-    private OnClickListener btnStartListener = new View.OnClickListener() {
+/*    private OnClickListener btnStartListener = new View.OnClickListener() {
         public void onClick(View v){
             //btnStart.setVisibility(View.INVISIBLE);
             printTask = new PrintTask();
             printTask.execute();
         }
-    };
+    };*/
     
     public class PrintTask extends AsyncTask<Void, byte[], Boolean> {
     	private ProgressDialog dialog;
