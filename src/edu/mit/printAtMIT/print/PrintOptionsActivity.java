@@ -10,13 +10,13 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -108,10 +108,14 @@ public class PrintOptionsActivity extends ListActivity {
     }
     
     @Override
+    public void onConfigurationChanged(Configuration newConfig){
+        super.onConfigurationChanged(newConfig);
+    }
+    
+    @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenuInfo menuInfo) {
       super.onCreateContextMenu(menu, v, menuInfo);
-      Toast.makeText(this, "" + v.getId(), Toast.LENGTH_SHORT).show();
       menu.setHeaderTitle("Ink Color Settings");
       MenuInflater inflater = getMenuInflater();
       inflater.inflate(R.menu.inkcolor_menu, menu);
@@ -140,17 +144,13 @@ public class PrintOptionsActivity extends ListActivity {
        {
        case R.id.bw:
     	   queue = "bw";
-    	   editor.putString(PrintAtMITActivity.INKCOLOR, PrintAtMITActivity.BLACKWHITE);
     	   items.set(ITEM_INKCOLOR, new EntryItem("Ink Color", PrintAtMITActivity.BLACKWHITE, ITEM_INKCOLOR));
-    	   editor.commit();
            adapter = new EntryAdapter(this, items);
            setListAdapter(adapter);
           return true;
        case R.id.color:
     	  queue = "color";
-          editor.putString(PrintAtMITActivity.INKCOLOR, PrintAtMITActivity.COLOR);
           items.set(ITEM_INKCOLOR, new EntryItem("Ink Color", PrintAtMITActivity.COLOR, ITEM_INKCOLOR));
-          editor.commit();
           adapter = new EntryAdapter(this, items);
           setListAdapter(adapter);
           return true;
@@ -167,7 +167,6 @@ public class PrintOptionsActivity extends ListActivity {
     		//saves user-inputted username
     		case ITEM_FILENAME:
     			final Dialog dialog = new Dialog(this);
-        		Toast.makeText(this, v.toString(), Toast.LENGTH_SHORT).show();
 
     			dialog.setContentView(R.layout.about_dialog);
     			dialog.setTitle(fileName);
@@ -178,8 +177,6 @@ public class PrintOptionsActivity extends ListActivity {
         		return;
         	//context menu appears for ink color
     		case ITEM_INKCOLOR: 
-        		Toast.makeText(this, v.toString(), Toast.LENGTH_SHORT).show();
-
     			registerForContextMenu( v ); 
     		    v.setLongClickable(false); 
     		    this.openContextMenu(v);
@@ -198,9 +195,7 @@ public class PrintOptionsActivity extends ListActivity {
       		  			.setCancelable(false)
 	        	        .setView(copy)
 	        	        .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-	        	        	public void onClick(DialogInterface dialog, int id) {
-	        	        		Toast.makeText(getApplicationContext(), copy.getText(), Toast.LENGTH_SHORT).show();
-	        	        		
+	        	        	public void onClick(DialogInterface dialog, int id) {	        	        		
 	        	    			int copies = userSettings.getInt(PrintAtMITActivity.COPIES, 1);
 	        	    			String text = copy.getText().toString();
 	        	        		copies = (text.equals("") || text.equals("0")) ? copies : Integer.parseInt(copy.getText().toString());

@@ -199,7 +199,6 @@ public class SettingsActivity extends ListActivity {
           	         .setPositiveButton("Save", new DialogInterface.OnClickListener() {
           	             public void onClick(DialogInterface dialog, int id) {
           	            	 
-          	         		 Toast.makeText(getApplicationContext(), copy.getText(), Toast.LENGTH_SHORT).show();
 	        	    		 int copies = userSettings.getInt(PrintAtMITActivity.COPIES, 1);
 	        	    		 String text = copy.getText().toString();
 	        	        	 copies = (text.equals("") || text.equals("0")) ? copies : Integer.parseInt(copy.getText().toString());
