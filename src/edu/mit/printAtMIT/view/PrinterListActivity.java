@@ -9,9 +9,6 @@ import java.util.Map;
 
 import android.app.ListActivity;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;

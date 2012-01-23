@@ -14,7 +14,7 @@ import com.google.android.maps.OverlayItem;
  */
 public class PrinterItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 
-    private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
+    private ArrayList<OverlayItem> mOverlayItems = new ArrayList<OverlayItem>();
     private Context mContext;
 
     public PrinterItemizedOverlay(Drawable defaultMarker, Context context) {
@@ -25,16 +25,16 @@ public class PrinterItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 
     @Override
     protected OverlayItem createItem(int i) {
-        return mOverlays.get(i);
+        return mOverlayItems.get(i);
     }
 
     @Override
     public int size() {
-        return mOverlays.size();
+        return mOverlayItems.size();
     }
 
     public void addOverlay(OverlayItem overlay) {
-        mOverlays.add(overlay);
+        mOverlayItems.add(overlay);
         populate();
     }
 
@@ -42,11 +42,12 @@ public class PrinterItemizedOverlay extends ItemizedOverlay<OverlayItem> {
     protected boolean onTap(int index) {
         // TODO Auto-generated method stub
 //        return super.onTap(index);
-        OverlayItem item = mOverlays.get(index);
+        OverlayItem item = mOverlayItems.get(index);
         AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
         dialog.setTitle(item.getTitle());
         dialog.setMessage(item.getSnippet());
         dialog.show();
+        
         return true;
     }
     

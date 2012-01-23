@@ -52,7 +52,9 @@ public class EntryAdapter extends ArrayAdapter<Item> {
                 v = vi.inflate(R.layout.list_item, null);
                 final TextView text = (TextView) v.findViewById(R.id.list_item_text);
                 if (text != null) {
-                    text.setText(pei.printerName + "\t\t" + pei.location + "\t\t" + new Integer(pei.status).toString());
+//                    text.setText(pei.printerName + "\t\t" + pei.location + "\t\t" + new Integer(pei.status).toString());
+                    text.setText(pei.printerName + "\t\t" + pei.location + "\t\t" + pei.getStatusString());
+
                 }
             } else if (!i.isButton()) {
                 EntryItem ei = (EntryItem) i;
