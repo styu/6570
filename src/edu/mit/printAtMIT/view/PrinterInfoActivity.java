@@ -44,6 +44,7 @@ public class PrinterInfoActivity extends Activity {
         ParseObject printer;
         StringBuilder name = new StringBuilder("Printer Name: ");
         StringBuilder info = new StringBuilder("Front Panel Message: " + "\n");
+        StringBuilder status = new StringBuilder("Status: ");
         StringBuilder paperJam = new StringBuilder("Paper Jam: ");
         StringBuilder paperStatus = new StringBuilder("Paper Status: ");
         StringBuilder tonerStatus = new StringBuilder("Toner Status: ");
@@ -52,26 +53,30 @@ public class PrinterInfoActivity extends Activity {
             printer = query.get(id);
             name.append(printer.getString("printerName"));
             info.append(printer.get("FrontPanelMessage") + "\n");
-            if (printer.get("line2") != null) {
-                info.append(printer.get("line2") + "\n");
+            if (printer.getString("status") != null) {
+                status.append(this.getStatus(Integer.parseInt(printer
+                        .getString("status"))));
             }
-            if (printer.get("line3") != null) {
-                info.append(printer.get("line3") + "\n");
+            if (printer.getString("line2") != null) {
+                info.append(printer.getString("line2") + "\n");
             }
-            if (printer.get("line4") != null) {
-                info.append(printer.get("line4") + "\n");
+            if (printer.getString("line3") != null) {
+                info.append(printer.getString("line3") + "\n");
             }
-            if (printer.get("line5") != null) {
-                info.append(printer.get("line5"));
+            if (printer.getString("line4") != null) {
+                info.append(printer.getString("line4") + "\n");
             }
-            if (printer.get("PaperJamStatus") != null) {
-                paperJam.append(printer.get("PaperJamStatus"));
+            if (printer.getString("line5") != null) {
+                info.append(printer.getString("line5"));
             }
-            if (printer.get("PaperStatus") != null) {
-                paperStatus.append(printer.get("PaperStatus"));
+            if (printer.getString("PaperJamStatus") != null) {
+                paperJam.append(printer.getString("PaperJamStatus"));
             }
-            if (printer.get("TonerStatus") != null) {
-                tonerStatus.append(printer.get("TonerStatus"));
+            if (printer.getString("PaperStatus") != null) {
+                paperStatus.append(printer.getString("PaperStatus"));
+            }
+            if (printer.getString("TonerStatus") != null) {
+                tonerStatus.append(printer.getString("TonerStatus"));
             }
         } catch (ParseException e) {
             info.append("Parse nubfail, fool");
@@ -106,8 +111,8 @@ public class PrinterInfoActivity extends Activity {
         });
         TextView view = (TextView) findViewById(R.id.printer_info_text);
         view.setText(name.toString() + "\n\n" + info.toString() + "\n\n"
-                + paperJam.toString() + "\n\n" + paperStatus.toString() + "\n\n"
-                + tonerStatus.toString());
+                + status.toString() + "\n\n" + paperJam.toString() + "\n\n"
+                + paperStatus.toString() + "\n\n" + tonerStatus.toString());
         mDbAdapter.close();
     }
 
@@ -128,5 +133,20 @@ public class PrinterInfoActivity extends Activity {
             button02.setText("Add to favorites");
         }
         mDbAdapter.open();
+    }
+
+    private String getStatus(int code) {
+        switch (code) {
+        case 0:
+            return "Ready";
+        case 1:
+            return "Busy";
+        case 2:
+            return "Error";
+        default:
+            Log.e("PrinterInfoActivity", "shouldn't get here, yo");
+            break;
+        }
+        return null;
     }
 }
