@@ -21,4 +21,10 @@ public class EntryItem implements Item{
 		return false;
 	}
 
+    @Override
+    public boolean isPrinterEntry() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
 }

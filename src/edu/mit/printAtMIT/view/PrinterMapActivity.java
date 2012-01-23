@@ -25,7 +25,7 @@ import java.util.List;
  * Shows map of printers, color coded by status
  * 
  * Menu Items:
- * 
+ *      Home About Refresh
  */
 public class PrinterMapActivity extends MapActivity {
     public static final int MIT_CENTER_LAT = 42359425;

@@ -9,6 +9,7 @@ import edu.mit.printAtMIT.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -18,16 +19,29 @@ import android.widget.TextView;
  */
 public class PrinterInfoActivity extends Activity {
     
+    private PrintersDbAdapter mDbAdapter;
+    private boolean favorite;
+    private Button button02;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i("PrinterInfoActivity", "onCreate");
         Parse.initialize(this, "KIb9mNtPKDtkDk7FJ9W6b7MiAr925a10vNuCPRer",
                 "dSFuQYQXSvslh9UdznzzS9Vb0kDgcKnfzgglLUHT");
         setContentView(R.layout.printer_info);
+                
         Bundle extras = getIntent().getExtras(); 
         final String id = extras.getString("id");
+        
+        //set favorite state of printer
+        mDbAdapter = new PrintersDbAdapter(this);
+        mDbAdapter.open();
+        favorite = mDbAdapter.isFavorite(id);
+        
         StringBuilder info = new StringBuilder("Front Panel Message: " + "\n");
-        //Parse makes call to cloud to retreive printer information
+        
+        //Parse makes call to cloud to retrieve printer information
         ParseQuery query = new ParseQuery("PrintersData");
         ParseObject printer;
         try {
@@ -49,6 +63,7 @@ public class PrinterInfoActivity extends Activity {
             info.append("Parse nubfail, fool");
         }
         Button button01 = (Button) findViewById(R.id.button01);
+        button02 = (Button) findViewById(R.id.button02);
         button01.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
@@ -57,7 +72,46 @@ public class PrinterInfoActivity extends Activity {
                 startActivity(intent);
             }
         });
+        
+        button02.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (favorite) {
+                    mDbAdapter.removeFavorite(id);
+                    button02.setText("Add to Favorites");
+                    favorite = false;
+                }
+                else {
+                    mDbAdapter.addToFavorites(id);
+                    button02.setText("Remove from Favorites");
+                    favorite = true;
+                }
+            }
+            
+        });
         TextView view = (TextView) findViewById(R.id.printer_info_text);
         view.setText(info.toString());
+        mDbAdapter.close();
+    }
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i("PrinterInfoActivity", "onPause");
+        mDbAdapter.close();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i("PrinterInfoActivity", "onResume");
+        if (favorite) {
+            button02.setText("Remove from favorites");
+        }
+        else {
+            button02.setText("Add to favorites");
+        }
+        mDbAdapter.open();
     }
 }

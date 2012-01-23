@@ -19,4 +19,9 @@ public class SectionItem implements Item{
 	public boolean isButton() {
 		return false;
 	}
+
+    @Override
+    public boolean isPrinterEntry() {
+        return false;
+    }
 }
