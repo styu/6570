@@ -53,15 +53,7 @@ public class PrinterInfoActivity extends Activity {
 
         Button button01 = (Button) findViewById(R.id.button01);
         button02 = (Button) findViewById(R.id.button02);
-        String data = "";
-        try {
-            Log.i(TAG, "onCreate getting data from parse");
-            data = refresh();
-        } catch (ParseException e) {
-            // e.printStackTrace();
-            Log.e(TAG, "onCreate PARSE NUBPHAIL");
-            data = "Sorry, data retrival failed, please try again later";
-        }
+
         button01.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
@@ -89,8 +81,9 @@ public class PrinterInfoActivity extends Activity {
 
         });
 
-        TextView tv = (TextView) findViewById(R.id.printer_info_text);
-        tv.setText(data);
+
+        RefreshTask task = new RefreshTask();
+        task.execute();
         mDbAdapter.close();
     }
 
