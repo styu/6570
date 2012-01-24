@@ -11,6 +11,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
@@ -65,13 +66,19 @@ public class PrintOptionsActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        //setContentView(R.layout.print_options);
-        // Show file chosen -- need to add options (bw/color, copies, change print name), then print
-        Bundle extras = getIntent().getExtras(); 
-        fileLoc = extras.getString("fileLoc");
-        fileName = extras.getString("fileName");
-        //Toast.makeText(getApplicationContext(), fileLoc, Toast.LENGTH_SHORT).show();
-        //Toast.makeText(getApplicationContext(), fileName, Toast.LENGTH_SHORT).show();
+        // when called from opening a file outside of app
+        Uri data = getIntent().getData();
+        if (data != null) {
+        	File f = new File(data.getPath());
+        	fileLoc = f.getPath().toString();
+        	fileName = f.getName();
+        }
+        else{
+        	// gotten from a print activity
+        	Bundle extras = getIntent().getExtras();
+        	fileLoc = extras.getString("fileLoc");
+        	fileName = extras.getString("fileName");
+        }
         
         SharedPreferences userSettings = getSharedPreferences(PrintAtMITActivity.PREFS_NAME, MODE_PRIVATE);
         userName = userSettings.getString(PrintAtMITActivity.USERNAME, "");
@@ -184,6 +191,7 @@ public class PrintOptionsActivity extends ListActivity {
     		   
     			break;
     		case ITEM_COPIES:
+    			// dialog pops up for copy number
     			final View view = v;
 
     			final SharedPreferences userSettings = getSharedPreferences(PrintAtMITActivity.PREFS_NAME, MODE_PRIVATE);
@@ -217,6 +225,7 @@ public class PrintOptionsActivity extends ListActivity {
       		  	AlertDialog alert = builder.create();
 	        	alert.show();
 	        	
+	        	// have soft keyboard automatically show up
 				alert.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
 	        	break;

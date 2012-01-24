@@ -32,7 +32,15 @@
             android:label="Print files"></activity>
         <activity android:name=".print.PrintOptionsActivity"
             android:label="Printing Options"
-            android:configChanges="keyboardHidden|orientation"></activity>
+            android:configChanges="keyboardHidden|orientation">
+    		<intent-filter>
+        		<action android:name="android.intent.action.VIEW" />
+        		<category android:name="android.intent.category.DEFAULT" />
+        		<category android:name="android.intent.category.BROWSABLE" />
+        		<data android:scheme="file" /> 
+        		<data android:mimeType="application/pdf" />
+    		</intent-filter>
+        </activity>
         
         <activity android:name=".view.PrinterMapActivity" android:launchMode="singleTop"  android:process="map.test">
             <action android:name="android.intent.action.MAIN" />
