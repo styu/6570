@@ -43,6 +43,7 @@ public class PrinterEntryItem implements Item {
             case 0: string = "Ready"; break;
             case 1: string = "Busy"; break;
             case 2: string = "Error"; break;
+            case 3: string = "Unknown"; break;
             default: Log.e("PrinterEntryItem", "Invalid printer status, thos hast problems"); break;
         }
         return string;

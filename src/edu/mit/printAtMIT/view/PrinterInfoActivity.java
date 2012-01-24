@@ -81,7 +81,6 @@ public class PrinterInfoActivity extends Activity {
 
         });
 
-
         RefreshTask task = new RefreshTask();
         task.execute();
         mDbAdapter.close();
