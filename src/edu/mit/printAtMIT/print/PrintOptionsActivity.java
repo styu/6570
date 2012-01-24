@@ -20,6 +20,7 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -215,6 +216,9 @@ public class PrintOptionsActivity extends ListActivity {
 	        	         });
       		  	AlertDialog alert = builder.create();
 	        	alert.show();
+	        	
+				alert.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+
 	        	break;
 
     		case ITEM_PRINT_BUTTON:

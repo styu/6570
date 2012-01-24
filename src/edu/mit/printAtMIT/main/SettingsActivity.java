@@ -1,9 +1,7 @@
 package edu.mit.printAtMIT.main;
 
-import com.parse.Parse;
+import java.util.ArrayList;
 
-import edu.mit.printAtMIT.R;
-import edu.mit.printAtMIT.PrintAtMITActivity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
@@ -19,15 +17,18 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-
-
-import java.util.ArrayList;
-import edu.mit.printAtMIT.list.*;
+import edu.mit.printAtMIT.PrintAtMITActivity;
+import edu.mit.printAtMIT.R;
+import edu.mit.printAtMIT.list.EntryAdapter;
+import edu.mit.printAtMIT.list.EntryItem;
+import edu.mit.printAtMIT.list.Item;
+import edu.mit.printAtMIT.list.SectionItem;
 
 /**
  * Users can reset their kerberos ID here
@@ -221,6 +222,9 @@ public class SettingsActivity extends ListActivity {
           	         });
           	  AlertDialog alert = builder.create();
           	  alert.show();
+          	  // have soft keyboard automatically pop up
+          	  alert.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+
           	  break;
     		default: Toast.makeText(this, "herp derp", Toast.LENGTH_SHORT).show(); break;
     		}
