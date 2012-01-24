@@ -3,12 +3,14 @@ package edu.mit.printAtMIT.print;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Set;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -55,7 +57,7 @@ public class PrintOptionsActivity extends ListActivity {
     //public static Button btnStart;
     
     final String hostName = "mitprint.mit.edu";
-
+    
     ArrayList<Item> items = new ArrayList<Item>();
 	private static final int ITEM_FILENAME = 1;
 	private static final int ITEM_INKCOLOR = 3;
@@ -66,18 +68,28 @@ public class PrintOptionsActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
+        Intent i = getIntent();
         // when called from opening a file outside of app
-        Uri data = getIntent().getData();
+        Uri data = i.getData();
         if (data != null) {
+        	Log.d("INTENT", data.toString());
         	File f = new File(data.getPath());
         	fileLoc = f.getPath().toString();
         	fileName = f.getName();
         }
         else{
-        	// gotten from a print activity
-        	Bundle extras = getIntent().getExtras();
-        	fileLoc = extras.getString("fileLoc");
-        	fileName = extras.getString("fileName");
+        	Bundle extras = i.getExtras();
+        	String url = extras.getString("android.intent.extra.TEXT");
+           	if (url == null) {
+           		// gotten from a print activity
+           		fileLoc = extras.getString("fileLoc");
+           		fileName = extras.getString("fileName");
+           	}
+           	else{
+            	// when called from sharing web page
+           		Log.d("INTENT", url);
+           		// TODO : implement pdfmyurl api
+           	}
         }
         
         SharedPreferences userSettings = getSharedPreferences(PrintAtMITActivity.PREFS_NAME, MODE_PRIVATE);
