@@ -88,6 +88,8 @@ public class PrintOptionsActivity extends ListActivity {
            	else{
             	// when called from sharing web page
            		Log.d("INTENT", url);
+           		fileName = url;
+           		fileLoc = url;
            		// TODO : implement pdfmyurl api
            	}
         }
