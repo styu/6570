@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.Map;
 
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.parse.Parse;
 import com.parse.ParseException;
@@ -74,6 +76,9 @@ public class PrinterListActivity extends ListActivity {
 
     private void setPrinterMap() {
         ParseQuery query = new ParseQuery("PrintersData");
+        Log.i("PrinterListActivity", "progress dialog show up");
+        ProgressDialog dialog = ProgressDialog.show(this, "", "Getting data", true);
+
         try {
             List<ParseObject> objects = query.find();
             for (ParseObject o : objects) {
@@ -87,7 +92,10 @@ public class PrinterListActivity extends ListActivity {
         } catch (ParseException e1) {
             Log.e("printerList", "query.find() FAILED");
             e1.printStackTrace();
+            dialog.dismiss();
+            Toast.makeText(PrinterListActivity.this, "Error getting data, sucks bro", Toast.LENGTH_SHORT).show();
         }
+        dialog.dismiss();
 
     }
 
