@@ -18,16 +18,17 @@ import android.util.Log;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-
 
 /**
  * Shows map of printers, color coded by status
  * 
- * Menu Items:
- *      Home About Refresh
+ * Menu Items: Home About Refresh
  */
 public class PrinterMapActivity extends MapActivity {
+    public static final String TAG = "PrinterMapActivity";
     public static final int MIT_CENTER_LAT = 42359425;
     public static final int MIT_CENTER_LONG = -71094735;
     LinearLayout linearLayout;
@@ -44,19 +45,18 @@ public class PrinterMapActivity extends MapActivity {
         Parse.initialize(this, "KIb9mNtPKDtkDk7FJ9W6b7MiAr925a10vNuCPRer",
                 "dSFuQYQXSvslh9UdznzzS9Vb0kDgcKnfzgglLUHT");
         setContentView(R.layout.map);
-        Bundle extras = getIntent().getExtras(); 
-        
-        Log.i("printerlist", "creating ParseQuery PrintersData");
+        Bundle extras = getIntent().getExtras();
+
+        Log.i(TAG, "creating ParseQuery PrintersData");
         ParseQuery query = new ParseQuery("PrintersData");
-        Log.i("printerlist", "created ParseQuery PrintersData");
+        Log.i(TAG, "created ParseQuery PrintersData");
         boolean allView = extras.getBoolean("allPrinterView", false);
-        
+
         int centerLat = MIT_CENTER_LAT;
         int centerLong = MIT_CENTER_LONG;
         if (allView) {
             setPrinterList(query);
-        }
-        else {
+        } else {
             String id = extras.getString("id");
             ParseObject printer;
             try {
@@ -69,28 +69,38 @@ public class PrinterMapActivity extends MapActivity {
                 e.printStackTrace();
             }
         }
-        
+
         mapView = (MapView) findViewById(R.id.mapview);
         mapView.setBuiltInZoomControls(true);
         mapOverlays = mapView.getOverlays();
-        drawable = this.getResources().getDrawable(R.drawable.androidmarker);
+        drawable = this.getResources().getDrawable(R.drawable.map_green_pin);
         itemizedOverlay = new PrinterItemizedOverlay(drawable, this);
         MapController controller = mapView.getController();
-        
-        // make mapview start at MIT if allView, else animate to selected printer loc
+
+        // make mapview start at MIT if allView, else animate to selected
+        // printer loc
         if (allView) {
-            //TODO: set center at your current location
+            // TODO: set center at your current location
             controller.setCenter(new GeoPoint(centerLat, centerLong));
             controller.setZoom(17);
 
-        }
-        else {
+        } else {
             controller.setZoom(17);
             controller.animateTo(new GeoPoint(centerLat, centerLong));
         }
-        
+
+        Collections.sort(mPrinters, new Comparator<ParseObject>() {
+
+            @Override
+            public int compare(ParseObject obj1, ParseObject obj2) {
+                return Integer.parseInt(obj1.getString("status"))
+                        - Integer.parseInt(obj2.getString("status"));
+            }
+
+        });
         // add printer overlayitems to map
         for (ParseObject printer : mPrinters) {
+            Log.i(TAG, printer.getString("status"));
             GeoPoint point = new GeoPoint(Integer.parseInt(printer
                     .getString("latitude")), Integer.parseInt(printer
                     .getString("longitude")));
@@ -99,6 +109,17 @@ public class PrinterMapActivity extends MapActivity {
                     printer.getString("printerName"),
                     printer.getString("location"));
             
+            if (printer.getString("status").equals("1")){
+                drawable = this.getResources().getDrawable(R.drawable.map_yellow_pin);
+            }
+            else if (printer.getString("status").equals("2")) {
+                drawable = this.getResources().getDrawable(R.drawable.map_red_pin);
+            }
+            else {
+                drawable = this.getResources().getDrawable(R.drawable.map_green_pin);
+            }
+            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+            item.setMarker(drawable);
             itemizedOverlay.addOverlay(item);
         }
 
@@ -111,8 +132,8 @@ public class PrinterMapActivity extends MapActivity {
     }
 
     /**
-     * Makes request to Parse to retrieve list of all printers.
-     * Sets mPrinters to that list.
+     * Makes request to Parse to retrieve list of all printers. Sets mPrinters
+     * to that list.
      */
     private void setPrinterList(ParseQuery query) {
 
@@ -122,7 +143,7 @@ public class PrinterMapActivity extends MapActivity {
                 mPrinters.add(o);
             }
         } catch (ParseException e1) {
-            Log.e("printerList", "query.find() FAILED");
+            Log.e(TAG, "query.find() FAILED");
         }
 
     }
