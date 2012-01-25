@@ -1,9 +1,22 @@
 package edu.mit.printAtMIT.print;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.List;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -16,6 +29,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.InputType;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -87,10 +101,12 @@ public class PrintOptionsActivity extends ListActivity {
            	}
            	else{
             	// when called from sharing web page
-           		Log.d("INTENT", url);
+           		UrlConverterTask urlConverter = new UrlConverterTask();
+           		urlConverter.execute(new String[] { url });
+                String extStorageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
+                File f = new File(extStorageDirectory, "printAtMIT.pdf");
            		fileName = url;
-           		fileLoc = url;
-           		// TODO : implement pdfmyurl api
+           		fileLoc = f.getPath();
            	}
         }
         
@@ -100,7 +116,7 @@ public class PrintOptionsActivity extends ListActivity {
         	queue = "color";
         else
         	queue = "bw";
-        //Toast.makeText(getApplicationContext(), fileLoc + userName + hostName + queue, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(getApplicationContext(), fileLoc + userName + hostName + queue, Toast.LENGTH_SHORT).show();
 
         
         /*TextView text = (TextView) findViewById(R.id.list_item_entry_title);
@@ -129,6 +145,72 @@ public class PrintOptionsActivity extends ListActivity {
         //textStatus = (TextView)findViewById(R.id.textStatus);
     }
     
+    public class UrlConverterTask extends AsyncTask<String, Void, Boolean> {
+    	private ProgressDialog dialog;
+    	
+        @Override
+        protected void onPreExecute() {
+            dialog = ProgressDialog.show(PrintOptionsActivity.this, "", 
+                    "Converting to PDF...", true);
+        }
+        
+        @Override
+        protected Boolean doInBackground(String... params) { //This runs on a different thread
+            String url = params[0];
+            boolean result = false;
+            
+        	try {
+                HttpClient client = new DefaultHttpClient();  
+                String  postURL = "http://pdfmyurl.com";
+                HttpPost post = new HttpPost(postURL); 
+                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+                pairs.add(new BasicNameValuePair("url", url));
+                pairs.add(new BasicNameValuePair("-O", "Portrait"));
+                UrlEncodedFormEntity ent = new UrlEncodedFormEntity(pairs,HTTP.UTF_8);
+                post.setEntity(ent);
+                HttpResponse responsePOST = client.execute(post);  
+                HttpEntity resEntity = responsePOST.getEntity();  
+                
+                InputStream inputStream = resEntity.getContent();
+                String extStorageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
+                File f = new File(extStorageDirectory, "printAtMIT.pdf");
+
+            	OutputStream out = new FileOutputStream(f);
+
+            	int read = 0;
+            	byte[] bytes = new byte[1024];
+             
+            	while ((read = inputStream.read(bytes)) != -1) {
+            		out.write(bytes, 0, read);
+            	}
+             
+            	inputStream.close();
+            	out.flush();
+            	out.close();
+            	
+                
+            } catch (Exception  e) {
+                e.printStackTrace();
+                result = true;
+            }
+        	return result;
+        }
+
+        protected void onPostExecute(Boolean result) {
+        	dialog.dismiss();
+        	
+            if (result) {
+            	finish();
+                Toast.makeText(getApplicationContext(), "Error converting, try again", Toast.LENGTH_SHORT).show();
+                Log.i("UrlConverterTask", "onPostExecute: Completed with an Error.");
+            } else {
+                Toast.makeText(getApplicationContext(), "Successfully converted", Toast.LENGTH_SHORT).show();
+                Log.i("UrlConverterTask", "onPostExecute: Completed.");
+            }
+        }
+        
+    }
+        
     @Override
     public void onConfigurationChanged(Configuration newConfig){
         super.onConfigurationChanged(newConfig);
@@ -264,14 +346,14 @@ public class PrintOptionsActivity extends ListActivity {
         }
     };*/
     
-    public class PrintTask extends AsyncTask<Void, byte[], Boolean> {
+    public class PrintTask extends AsyncTask<Void, Void, Boolean> {
     	private ProgressDialog dialog;
 
         @Override
         protected void onPreExecute() {
             Log.i("AsyncTask", "onPreExecute");
             dialog = ProgressDialog.show(PrintOptionsActivity.this, "", 
-                    "Sending print job", true);
+                    "Sending print job...", true);
         }
 
         @Override
@@ -304,9 +386,11 @@ public class PrintOptionsActivity extends ListActivity {
         protected void onPostExecute(Boolean result) {
         	dialog.dismiss();
             if (result) {
+            	finish();
                 Toast.makeText(getApplicationContext(), "Error sending, try again", Toast.LENGTH_SHORT).show();
                 Log.i("AsyncTask", "onPostExecute: Completed with an Error.");
             } else {
+            	finish();
                 Toast.makeText(getApplicationContext(), "Successfully sent", Toast.LENGTH_SHORT).show();
                 Log.i("AsyncTask", "onPostExecute: Completed.");
             }
