@@ -36,6 +36,7 @@ public class PrinterMapActivity extends MapActivity {
     List<Overlay> mapOverlays;
     Drawable drawable;
     PrinterItemizedOverlay itemizedOverlay;
+    FixedMyLocationOverlay myLocationOverlay;
     private List<ParseObject> mPrinters;
 
     @Override
@@ -75,6 +76,10 @@ public class PrinterMapActivity extends MapActivity {
         mapOverlays = mapView.getOverlays();
         drawable = this.getResources().getDrawable(R.drawable.map_green_pin);
         itemizedOverlay = new PrinterItemizedOverlay(drawable, this);
+        myLocationOverlay = new FixedMyLocationOverlay(this, mapView);
+        mapOverlays.add(myLocationOverlay);
+        mapView.postInvalidate();
+
         MapController controller = mapView.getController();
 
         // make mapview start at MIT if allView, else animate to selected
@@ -131,6 +136,18 @@ public class PrinterMapActivity extends MapActivity {
         return false;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        myLocationOverlay.enableMyLocation();
+    }
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+        myLocationOverlay.disableMyLocation();
+    }
+    
     /**
      * Makes request to Parse to retrieve list of all printers. Sets mPrinters
      * to that list.
