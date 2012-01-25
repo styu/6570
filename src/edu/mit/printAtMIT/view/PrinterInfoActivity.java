@@ -9,6 +9,8 @@ import edu.mit.printAtMIT.R;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,7 +28,7 @@ import android.widget.Toast;
  */
 public class PrinterInfoActivity extends Activity {
     public static final String TAG = "PrinterInfoActivity";
-    public static final String REFRESH_ERROR = "Error, please try again";
+    public static final String REFRESH_ERROR = "Error getting data, please be sure you are connected to the MIT network";
 
     private static final int REFRESH_ID = Menu.FIRST;
 
@@ -34,6 +36,8 @@ public class PrinterInfoActivity extends Activity {
     private boolean favorite;
     private Button button02;
     private String id;
+    private ConnectivityManager connManager;
+    private NetworkInfo mWifi;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,9 +85,35 @@ public class PrinterInfoActivity extends Activity {
 
         });
 
-        RefreshTask task = new RefreshTask();
-        task.execute();
+        connManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+        if (!mWifi.isConnected()) {
+            Toast.makeText(getApplicationContext(), "Network error",
+                    Toast.LENGTH_SHORT).show();
+            TextView tv = (TextView) findViewById(R.id.printer_info_text);
+            tv.setText(REFRESH_ERROR);
+        } else {
+            setViews();
+        }
+
         mDbAdapter.close();
+    }
+
+    private void setViews() {
+        String result = "";
+        try {
+            result = refresh();
+        } catch (ParseException e) {
+            // e.printStackTrace();
+            Log.e(TAG, "RefreshTask Parse NUBFAIL");
+            result = PrinterInfoActivity.REFRESH_ERROR;
+            Toast.makeText(getApplicationContext(),
+                    "Error getting data, please try again later",
+                    Toast.LENGTH_SHORT).show();
+        }
+        TextView tv = (TextView) findViewById(R.id.printer_info_text);
+        tv.setText(result);
     }
 
     @Override
@@ -101,6 +131,15 @@ public class PrinterInfoActivity extends Activity {
             button02.setText("Remove from favorites");
         } else {
             button02.setText("Add to favorites");
+        }
+
+        if (!mWifi.isConnected()) {
+            Toast.makeText(getApplicationContext(), "Network error",
+                    Toast.LENGTH_SHORT).show();
+            TextView tv = (TextView) findViewById(R.id.printer_info_text);
+            tv.setText(REFRESH_ERROR);
+        } else {
+            setViews();
         }
         mDbAdapter.open();
     }
@@ -148,7 +187,7 @@ public class PrinterInfoActivity extends Activity {
         case 2:
             return "Error";
         default:
-            Log.e("PrinterInfoActivity", "shouldn't get here, yo");
+            Log.e(TAG, "shouldn't get here, yo");
             break;
         }
         return null;
@@ -233,7 +272,7 @@ public class PrinterInfoActivity extends Activity {
                         Toast.LENGTH_SHORT).show();
                 Log.i(TAG,
                         "RefreshTask onPostExecute: Completed with an Error.");
-            } 
+            }
             TextView tv = (TextView) findViewById(R.id.printer_info_text);
             tv.setText(result);
             dialog.dismiss();
