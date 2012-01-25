@@ -228,8 +228,6 @@ public class PrinterListActivity extends ListActivity {
         @Override
         protected void onPostExecute(List<ParseObject> objects) { // happens in
                                                                   // UI thread
-            dialog.dismiss();
-
             // Bad practice, but meh, it'd be better if java had tuples
             if (objects == null) {
                 Toast.makeText(getApplicationContext(),
@@ -237,12 +235,9 @@ public class PrinterListActivity extends ListActivity {
                         Toast.LENGTH_SHORT).show();
                 Log.i(TAG,
                         "RefreshHashMapTask onPostExecute: Completed with an Error.");
-            } else {
-                Toast.makeText(getApplicationContext(), "Data refreshed",
-                        Toast.LENGTH_SHORT).show();
-                Log.i(TAG, "RefreshTask onPostExecute: Completed.");
-            }
+            } 
             setListViewData(objects);
+            dialog.dismiss();
         }
     }
 }
