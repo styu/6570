@@ -226,7 +226,6 @@ public class PrinterInfoActivity extends Activity {
 
         @Override
         protected void onPostExecute(String result) {
-            dialog.dismiss();
 
             if (result.equals(PrinterInfoActivity.REFRESH_ERROR)) {
                 Toast.makeText(getApplicationContext(),
@@ -234,13 +233,11 @@ public class PrinterInfoActivity extends Activity {
                         Toast.LENGTH_SHORT).show();
                 Log.i(TAG,
                         "RefreshTask onPostExecute: Completed with an Error.");
-            } else {
-                Toast.makeText(getApplicationContext(),
-                        "Printer data refreshed", Toast.LENGTH_SHORT).show();
-                Log.i(TAG, "RefreshTask onPostExecute: Completed.");
-            }
+            } 
             TextView tv = (TextView) findViewById(R.id.printer_info_text);
             tv.setText(result);
+            dialog.dismiss();
+
         }
     }
 
