@@ -16,10 +16,9 @@ import com.google.android.maps.Projection;
 
 
 /**
- * This is not our code.
  * Taken from
  * https://code.google.com/p/android-my-map-location/
- * Fix for buggy phones. 
+ * A fix for buggy phones. 
  */
 public class FixedMyLocationOverlay extends MyLocationOverlay{
 private boolean bugged = false;

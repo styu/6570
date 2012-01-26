@@ -38,6 +38,8 @@ public class PrinterMapActivity extends MapActivity {
     PrinterItemizedOverlay itemizedOverlay;
     FixedMyLocationOverlay myLocationOverlay;
     private List<ParseObject> mPrinters;
+    public boolean tapped_overlay = false;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,10 +77,12 @@ public class PrinterMapActivity extends MapActivity {
         mapView.setBuiltInZoomControls(true);
         mapOverlays = mapView.getOverlays();
         drawable = this.getResources().getDrawable(R.drawable.map_green_pin);
-        itemizedOverlay = new PrinterItemizedOverlay(drawable, this);
+        
         myLocationOverlay = new FixedMyLocationOverlay(this, mapView);
         mapOverlays.add(myLocationOverlay);
         mapView.postInvalidate();
+
+        itemizedOverlay = new PrinterItemizedOverlay(drawable, this, mapView);
 
         MapController controller = mapView.getController();
 
@@ -164,4 +168,5 @@ public class PrinterMapActivity extends MapActivity {
         }
 
     }
+    
 }
