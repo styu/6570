@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:divider="#00000000" 
-    android:padding="15dp">
+    android:padding="15dp"
+    android:background="@drawable/print_button_background">
         
     <TextView android:id="@+id/print_button"
             android:layout_width="100dp"
@@ -13,7 +14,7 @@
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:ellipsize="marquee"
-            android:background="@android:color/white"
+            android:background="@drawable/print_button"
             android:gravity="center_horizontal"
             android:layout_gravity="center_horizontal"
             android:fadingEdge="horizontal"
