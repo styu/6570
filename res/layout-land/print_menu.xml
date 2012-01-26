@@ -2,24 +2,24 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:paddingTop = "20dp">
+    android:layout_centerVertical="true"
+    android:gravity="center_vertical">
     <View android:id="@+id/helper1" 
 android:layout_width="0dp"
 android:layout_height="0dp" 
-android:layout_centerHorizontal="true" 
-android:layout_centerVertical="true"
-android:layout_marginTop="50dp"
-android:layout_marginBottom="10dp"/>
+android:layout_centerHorizontal="true"
+android:layout_marginLeft="45dp"
+android:layout_marginRight="45dp"/>
     	<RelativeLayout
     	    android:id="@+id/downloads"
-    	    android:layout_width="fill_parent"
+    	    android:layout_width="wrap_content"
     	    android:layout_height="90dp"
     	    android:gravity="center_vertical"
-    	    android:layout_above="@id/helper1">
+    	    android:layout_toLeftOf="@id/helper1">
     	    <Button 
     	        android:background="@android:color/transparent"
 			    android:id="@+id/downloads_image" 
-			    android:layout_width="fill_parent" 
+			    android:layout_width="wrap_content" 
 			    android:layout_height="wrap_content"
 			    android:drawableTop="@drawable/download_button"
 			    android:gravity="center_vertical|center_horizontal"
@@ -27,15 +27,15 @@ android:layout_marginBottom="10dp"/>
 			    android:textColor="@android:color/white"/>
         </RelativeLayout>
         <RelativeLayout
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="90dp"
             android:id="@+id/images"
             android:gravity="center_vertical"
-            android:layout_below="@id/helper1">
+            android:layout_toRightOf="@id/helper1">
 	        <Button 
     	        android:background="@android:color/transparent"
 			    android:id="@+id/images_image" 
-			    android:layout_width="fill_parent" 
+			    android:layout_width="wrap_content" 
 			    android:layout_height="wrap_content"
 			    android:drawableTop="@drawable/gallery_button"
 			    android:gravity="center_vertical|center_horizontal"

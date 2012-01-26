@@ -34,10 +34,13 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.inputmethod.EditorInfo;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -49,6 +52,8 @@ import edu.mit.printAtMIT.list.EntryAdapter;
 import edu.mit.printAtMIT.list.EntryItem;
 import edu.mit.printAtMIT.list.Item;
 import edu.mit.printAtMIT.list.SectionItem;
+import edu.mit.printAtMIT.main.MainMenuActivity;
+import edu.mit.printAtMIT.main.SettingsActivity;
 
 /**
  * User selects print options:
@@ -74,9 +79,10 @@ public class PrintOptionsActivity extends ListActivity {
     
     ArrayList<Item> items = new ArrayList<Item>();
 	private static final int ITEM_FILENAME = 1;
-	private static final int ITEM_INKCOLOR = 3;
-	private static final int ITEM_COPIES = 4;
-	private static final int ITEM_PRINT_BUTTON = 5;
+	private static final int ITEM_USERNAME = 3;
+	private static final int ITEM_INKCOLOR = 5;
+	private static final int ITEM_COPIES = 6;
+	private static final int ITEM_PRINT_BUTTON = 7;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -125,7 +131,8 @@ public class PrintOptionsActivity extends ListActivity {
         text.setText(fileLoc);  */
         items.add(new SectionItem("File name"));
         items.add(new EntryItem(fileName, fileLoc, ITEM_FILENAME));
-        
+        items.add(new SectionItem("Kerberos Id"));
+        items.add(new EntryItem("Change Kerberos Id", userSettings.getString(PrintAtMITActivity.USERNAME, ""), ITEM_USERNAME));
         items.add(new SectionItem("Printer Preferences"));
         items.add(new EntryItem("Ink Color", userSettings.getString(PrintAtMITActivity.INKCOLOR, PrintAtMITActivity.BLACKWHITE), ITEM_INKCOLOR));
         items.add(new EntryItem("Copies", ""+userSettings.getInt(PrintAtMITActivity.COPIES, 1), ITEM_COPIES));
@@ -145,6 +152,43 @@ public class PrintOptionsActivity extends ListActivity {
         //textStatus = (TextView)findViewById(R.id.textStatus);
     }
     
+    @Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.printmenu_menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		Intent intent;
+		switch (item.getItemId()) {
+		case R.id.home:
+			intent = new Intent(
+					findViewById(android.R.id.content).getContext(),
+					MainMenuActivity.class);
+			startActivity(intent);
+			return true;
+		case R.id.setting:
+			intent = new Intent(
+					findViewById(android.R.id.content).getContext(),
+					SettingsActivity.class);
+			startActivity(intent);
+			return true;
+		case R.id.about:
+			Dialog dialog = new Dialog(this);
+
+			dialog.setContentView(R.layout.about_dialog);
+			dialog.setTitle("About");
+			dialog.show();
+			super.onOptionsItemSelected(item);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
     public class UrlConverterTask extends AsyncTask<String, Void, Boolean> {
     	private ProgressDialog dialog;
     	
@@ -269,14 +313,42 @@ public class PrintOptionsActivity extends ListActivity {
     		switch(position) {
     		//popup dialog appears for username
     		//saves user-inputted username
-    		case ITEM_FILENAME:
+    		case ITEM_USERNAME:
     			final Dialog dialog = new Dialog(this);
 
-    			dialog.setContentView(R.layout.about_dialog);
-    			dialog.setTitle(fileName);
-    			TextView filename = (TextView) dialog.findViewById(R.id.about_text);
-    			filename.setText(fileLoc);
+    			dialog.setContentView(R.layout.username_dialog);
+    			dialog.setTitle("Change Kerberos Id");
     			dialog.show();
+    			
+    			Button saveButton = (Button) dialog.findViewById(R.id.save);
+    			EditText textfield = (EditText) dialog.findViewById(R.id.change_username);
+    			textfield.setImeOptions(EditorInfo.IME_ACTION_DONE);
+    	        
+    	        saveButton.setOnClickListener(new View.OnClickListener() {
+
+    	            public void onClick(View view) {
+    	            	SharedPreferences userSettings = getSharedPreferences(PrintAtMITActivity.PREFS_NAME, MODE_PRIVATE);
+    	            	EditText textfield = (EditText) dialog.findViewById(R.id.change_username);
+    	            	SharedPreferences.Editor editor = userSettings.edit();
+    	                editor.putString(PrintAtMITActivity.USERNAME, textfield.getText().toString());
+    	                editor.commit();
+    	      
+    	                items.set(ITEM_USERNAME, new EntryItem("Change Kerberos Id", textfield.getText().toString(), ITEM_USERNAME));
+    	                EntryAdapter adapter = new EntryAdapter(view.getContext(), items);
+    	                setListAdapter(adapter);
+    	                dialog.dismiss();
+    	            }
+    	        });
+    	        
+        		return;
+    		case ITEM_FILENAME:
+    			final Dialog fileDialog = new Dialog(this);
+
+    			fileDialog.setContentView(R.layout.about_dialog);
+    			fileDialog.setTitle(fileName);
+    			TextView filename = (TextView) fileDialog.findViewById(R.id.about_text);
+    			filename.setText(fileLoc);
+    			fileDialog.show();
     	        
         		return;
         	//context menu appears for ink color
