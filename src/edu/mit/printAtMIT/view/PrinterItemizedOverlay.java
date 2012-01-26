@@ -4,9 +4,12 @@ import java.util.ArrayList;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.MeasureSpec;
 import android.view.View.OnTouchListener;
 
 import com.google.android.maps.GeoPoint;
@@ -14,22 +17,25 @@ import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 import com.google.android.maps.MapView.LayoutParams;
+import com.google.android.maps.Projection;
 
 import edu.mit.printAtMIT.R;
+import edu.mit.printAtMIT.list.PrinterEntryItem;
 
 /**
- * An overlay showing printer locations in PrinterMapActivity
+ * An overlay showing printer locations in PrinterMapActivity. Some of the code
+ * is taken from
+ * https://github.com/MIT-Mobile/MIT-Mobile-for-Android/blob/master
+ * /src/edu/mit/mitmobile2/maps/MITItemizedOverlay.java
  */
-public class PrinterItemizedOverlay extends ItemizedOverlay<OverlayItem> {
+public class PrinterItemizedOverlay extends ItemizedOverlay<PrinterOverlayItem> {
 
-    private ArrayList<OverlayItem> mOverlayItems = new ArrayList<OverlayItem>();
+    private ArrayList<PrinterOverlayItem> mOverlayItems = new ArrayList<PrinterOverlayItem>();
     private Context mContext;
     private MapView mapView;
     private BalloonOverlayView balloonView;
     private View clickableRegion;
     private int mBubbleOffset = -5;
-    private boolean balloonVisible = false;
-    private int selectedIndex = -1;
 
     public PrinterItemizedOverlay(Drawable defaultMarker, Context context,
             MapView mapView) {
@@ -40,7 +46,7 @@ public class PrinterItemizedOverlay extends ItemizedOverlay<OverlayItem> {
     }
 
     @Override
-    protected OverlayItem createItem(int i) {
+    protected PrinterOverlayItem createItem(int i) {
         return mOverlayItems.get(i);
     }
 
@@ -49,7 +55,7 @@ public class PrinterItemizedOverlay extends ItemizedOverlay<OverlayItem> {
         return mOverlayItems.size();
     }
 
-    public void addOverlay(OverlayItem overlay) {
+    public void addOverlay(PrinterOverlayItem overlay) {
         mOverlayItems.add(overlay);
         populate();
     }
@@ -64,13 +70,12 @@ public class PrinterItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 
     @Override
     public boolean onTouchEvent(MotionEvent e, MapView mapView) {
-        // TODO Auto-generated method stub
         mapView.removeView(balloonView);
         return super.onTouchEvent(e, mapView);
 
     }
 
-    protected void makeBalloon(final OverlayItem item) {
+    protected void makeBalloon(final PrinterOverlayItem item) {
         GeoPoint gp = item.getPoint();
 
         mapView.removeView(balloonView);
@@ -109,25 +114,29 @@ public class PrinterItemizedOverlay extends ItemizedOverlay<OverlayItem> {
         balloonView.setData(item);
 
         MapView.LayoutParams params = new MapView.LayoutParams(
-                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, gp,
-                MapView.LayoutParams.BOTTOM_CENTER);
+                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, gp, MapView.LayoutParams.BOTTOM_CENTER);
 
-        params.mode = MapView.LayoutParams.MODE_MAP;
+//        params.mode = MapView.LayoutParams.MODE_MAP;
+        balloonView.setLayoutParams(params);
 
         balloonView.setVisibility(View.VISIBLE);
 
-        balloonView.setLayoutParams(params);
 
         mapView.getController().animateTo(gp);
 
         mapView.addView(balloonView);
+
+
     }
 
-    protected void handleTap(OverlayItem item) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
-        dialog.setTitle(item.getTitle());
-        dialog.setMessage(item.getSnippet());
-        dialog.show();
+    /**
+     * Balloon tap brings user back to printer info page.
+     * @param item
+     */
+    protected void handleTap(PrinterOverlayItem item) {
+        Intent intent = new Intent(mContext, PrinterInfoActivity.class);
+        intent.putExtra("id", item.getParseId());
+        mContext.startActivity(intent);
 
     }
 }

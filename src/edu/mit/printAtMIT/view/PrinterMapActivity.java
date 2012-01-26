@@ -10,6 +10,7 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
+import com.google.android.maps.ItemizedOverlay;
 
 import edu.mit.printAtMIT.R;
 import android.graphics.drawable.Drawable;
@@ -39,7 +40,6 @@ public class PrinterMapActivity extends MapActivity {
     FixedMyLocationOverlay myLocationOverlay;
     private List<ParseObject> mPrinters;
     public boolean tapped_overlay = false;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,7 +77,7 @@ public class PrinterMapActivity extends MapActivity {
         mapView.setBuiltInZoomControls(true);
         mapOverlays = mapView.getOverlays();
         drawable = this.getResources().getDrawable(R.drawable.map_green_pin);
-        
+
         myLocationOverlay = new FixedMyLocationOverlay(this, mapView);
         mapOverlays.add(myLocationOverlay);
         mapView.postInvalidate();
@@ -90,13 +90,15 @@ public class PrinterMapActivity extends MapActivity {
         // printer loc
         if (allView) {
             // TODO: set center at your current location
+            if (myLocationOverlay.getMyLocation() != null) {
+                centerLat = myLocationOverlay.getMyLocation().getLatitudeE6();
+                centerLong = myLocationOverlay.getMyLocation().getLongitudeE6();
+            }
             controller.setCenter(new GeoPoint(centerLat, centerLong));
-            controller.setZoom(17);
 
-        } else {
-            controller.setZoom(17);
-            controller.animateTo(new GeoPoint(centerLat, centerLong));
         }
+        controller.setZoom(17);
+        controller.animateTo(new GeoPoint(centerLat, centerLong));
 
         Collections.sort(mPrinters, new Comparator<ParseObject>() {
 
@@ -114,20 +116,22 @@ public class PrinterMapActivity extends MapActivity {
                     .getString("latitude")), Integer.parseInt(printer
                     .getString("longitude")));
 
-            OverlayItem item = new OverlayItem(point,
+            PrinterOverlayItem item = new PrinterOverlayItem(point,
                     printer.getString("printerName"),
-                    printer.getString("location"));
-            
-            if (printer.getString("status").equals("1")){
-                drawable = this.getResources().getDrawable(R.drawable.map_yellow_pin);
+                    printer.getString("location"), printer.getObjectId());
+
+            if (printer.getString("status").equals("1")) {
+                drawable = this.getResources().getDrawable(
+                        R.drawable.map_yellow_pin);
+            } else if (printer.getString("status").equals("2")) {
+                drawable = this.getResources().getDrawable(
+                        R.drawable.map_red_pin);
+            } else {
+                drawable = this.getResources().getDrawable(
+                        R.drawable.map_green_pin);
             }
-            else if (printer.getString("status").equals("2")) {
-                drawable = this.getResources().getDrawable(R.drawable.map_red_pin);
-            }
-            else {
-                drawable = this.getResources().getDrawable(R.drawable.map_green_pin);
-            }
-            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(),
+                    drawable.getIntrinsicHeight());
             item.setMarker(drawable);
             itemizedOverlay.addOverlay(item);
         }
@@ -145,13 +149,13 @@ public class PrinterMapActivity extends MapActivity {
         super.onResume();
         myLocationOverlay.enableMyLocation();
     }
-    
+
     @Override
     protected void onPause() {
         super.onPause();
         myLocationOverlay.disableMyLocation();
     }
-    
+
     /**
      * Makes request to Parse to retrieve list of all printers. Sets mPrinters
      * to that list.
@@ -168,5 +172,5 @@ public class PrinterMapActivity extends MapActivity {
         }
 
     }
-    
+
 }

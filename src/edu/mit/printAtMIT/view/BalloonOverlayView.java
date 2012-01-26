@@ -1,5 +1,6 @@
 package edu.mit.printAtMIT.view;
 
+import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 
 import edu.mit.printAtMIT.R;
@@ -19,7 +20,7 @@ public class BalloonOverlayView extends FrameLayout {
 
     public BalloonOverlayView(Context context, int balloonBottomOffset) {
         super(context);
-        setPadding(0, 0, 0, balloonBottomOffset);
+        setPadding(10, 0, 10, balloonBottomOffset);
         layout = new LinearLayout(context);
         layout.setVisibility(VISIBLE);
 
@@ -31,7 +32,7 @@ public class BalloonOverlayView extends FrameLayout {
         title = (TextView) v.findViewById(R.id.balloon_item_title);
         snippet = (TextView) v.findViewById(R.id.balloon_item_snippet);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, MapView.LayoutParams.BOTTOM_CENTER);
         params.gravity = Gravity.NO_GRAVITY;
 
         addView(layout, params);
