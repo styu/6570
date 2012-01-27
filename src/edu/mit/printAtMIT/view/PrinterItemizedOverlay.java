@@ -2,25 +2,19 @@ package edu.mit.printAtMIT.view;
 
 import java.util.ArrayList;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.MeasureSpec;
 import android.view.View.OnTouchListener;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapView;
-import com.google.android.maps.OverlayItem;
 import com.google.android.maps.MapView.LayoutParams;
-import com.google.android.maps.Projection;
 
 import edu.mit.printAtMIT.R;
-import edu.mit.printAtMIT.list.PrinterEntryItem;
 
 /**
  * An overlay showing printer locations in PrinterMapActivity. Some of the code
@@ -68,6 +62,9 @@ public class PrinterItemizedOverlay extends ItemizedOverlay<PrinterOverlayItem> 
         return true;
     }
 
+    /**
+     * Removes any balloons when touching elsewhere on map.
+     */
     @Override
     public boolean onTouchEvent(MotionEvent e, MapView mapView) {
         mapView.removeView(balloonView);
@@ -116,7 +113,7 @@ public class PrinterItemizedOverlay extends ItemizedOverlay<PrinterOverlayItem> 
         MapView.LayoutParams params = new MapView.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, gp, MapView.LayoutParams.BOTTOM_CENTER);
 
-//        params.mode = MapView.LayoutParams.MODE_MAP;
+        params.mode = MapView.LayoutParams.MODE_MAP;
         balloonView.setLayoutParams(params);
 
         balloonView.setVisibility(View.VISIBLE);
@@ -139,4 +136,6 @@ public class PrinterItemizedOverlay extends ItemizedOverlay<PrinterOverlayItem> 
         mContext.startActivity(intent);
 
     }
+    
+
 }

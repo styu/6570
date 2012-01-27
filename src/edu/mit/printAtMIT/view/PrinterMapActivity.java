@@ -117,8 +117,10 @@ public class PrinterMapActivity extends MapActivity {
                     .getString("longitude")));
 
             PrinterOverlayItem item = new PrinterOverlayItem(point,
-                    printer.getString("printerName"),
-                    printer.getString("location"), printer.getObjectId());
+                    printer.getString("printerName") + " ("
+                            + printer.getString("location") + ")",
+                    getStatusString(Integer.parseInt(printer
+                            .getString("status"))), printer.getObjectId());
 
             if (printer.getString("status").equals("1")) {
                 drawable = this.getResources().getDrawable(
@@ -173,4 +175,13 @@ public class PrinterMapActivity extends MapActivity {
 
     }
 
+    private String getStatusString(int x) {
+        if (x == 0) {
+            return "Ready";
+        } else if (x == 1) {
+            return "Busy";
+        } else {
+            return "Error";
+        }
+    }
 }
