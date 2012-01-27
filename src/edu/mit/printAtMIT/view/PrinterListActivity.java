@@ -9,6 +9,7 @@ import java.util.Map;
 
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -52,9 +53,9 @@ public class PrinterListActivity extends ListActivity {
     private Map<String, PrinterEntryItem> map = new HashMap<String, PrinterEntryItem>();
     private PrintersDbAdapter mDbAdapter;
     private PrinterComparator comparator = new PrinterComparator();
-    private ConnectivityManager connManager;
-    private NetworkInfo mWifi;
+    private final Context self = PrinterListActivity.this;
 
+    // Comparator to sort printers alphabetically
     public class PrinterComparator implements Comparator<PrinterEntryItem> {
 
         @Override
@@ -82,9 +83,7 @@ public class PrinterListActivity extends ListActivity {
                 startActivity(intent);
             }
         });
-        connManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-        mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        if (mWifi.isConnected()) {
+        if (isConnected(self)) {
             ParseQuery query = new ParseQuery("PrintersData");
             List<ParseObject> objects = null;
             try {
@@ -112,7 +111,7 @@ public class PrinterListActivity extends ListActivity {
         Log.i("PrinterListActivity", "Calling onResume()");
         // RefreshListTask task = new RefreshListTask();
         // task.execute();
-        if (mWifi.isConnected()) {
+        if (isConnected(self)) {
             ParseQuery query = new ParseQuery("PrintersData");
             List<ParseObject> objects = null;
             try {
@@ -149,7 +148,7 @@ public class PrinterListActivity extends ListActivity {
         switch (item.getItemId()) {
         case REFRESH_ID:
             RefreshListTask task = new RefreshListTask();
-            task.execute();
+            task.execute(isConnected(self));
             return true;
         }
 
@@ -162,24 +161,31 @@ public class PrinterListActivity extends ListActivity {
     private void setListViewData(List<ParseObject> objects) {
         TextView tv = (TextView) findViewById(R.id.printer_list_error);
         tv.setText("");
-        // resets map if not nulll
+        // resets map if not null
         if (objects != null) {
             map = new HashMap<String, PrinterEntryItem>();
             for (ParseObject o : objects) {
+                if (o.getBoolean("residence")) {
+                    Log.i(TAG, o.getString("printerName") + " residence");
+                } else {
+                    Log.i(TAG, o.getString("printerName") + " NOT RESIDENCE");
+                }
                 PrinterEntryItem item = new PrinterEntryItem(o.getObjectId(),
                         o.getString("printerName"), o.getString("location"),
                         Integer.parseInt(o.getString("status")));
                 map.put(o.getObjectId(), item);
             }
         } else {
-            // changes all status to unknown
-            Map<String, PrinterEntryItem> tmp = new HashMap<String, PrinterEntryItem>();
-            for (String key : map.keySet()) {
-                PrinterEntryItem item = map.get(key);
-                tmp.put(key, new PrinterEntryItem(item.parseId,
-                        item.printerName, item.location, item.status));
-                map = tmp;
-            }
+//            // changes all status to unknown
+//            Map<String, PrinterEntryItem> tmp = new HashMap<String, PrinterEntryItem>();
+//            for (String key : map.keySet()) {
+//                PrinterEntryItem item = map.get(key);
+//                tmp.put(key, new PrinterEntryItem(item.parseId,
+//                        item.printerName, item.location, item.status));
+//                map = tmp;
+//            }
+            //handle error
+            map = new HashMap<String, PrinterEntryItem>();
         }
 
         final List<Item> items = new ArrayList<Item>();
@@ -238,7 +244,7 @@ public class PrinterListActivity extends ListActivity {
      * Background task that refreshes the hashmap of printers. Modifies map.
      */
     public class RefreshListTask extends
-            AsyncTask<Void, byte[], List<ParseObject>> {
+            AsyncTask<Boolean, byte[], List<ParseObject>> {
         private ProgressDialog dialog;
 
         @Override
@@ -249,19 +255,21 @@ public class PrinterListActivity extends ListActivity {
         }
 
         @Override
-        protected List<ParseObject> doInBackground(Void... arg0) { // happens in
-                                                                   // background
-                                                                   // thread
+        protected List<ParseObject> doInBackground(Boolean... arg0) { // happens
+                                                                      // in
+                                                                      // background
+                                                                      // thread
             List<ParseObject> objects = null;
-
-            ParseQuery query = new ParseQuery("PrintersData");
-            try {
-                objects = query.find();
-            } catch (ParseException e) {
-                // swallow exception
-                // e.printStackTrace();
+            if (arg0[0]) {
+                ParseQuery query = new ParseQuery("PrintersData");
+                try {
+                    objects = query.find();
+                } catch (ParseException e) {
+                    // swallow exception
+                    // e.printStackTrace();
+                    Log.e(TAG, "PARSE NUBFAIL in refresh list task");
+                }
             }
-
             return objects;
         }
 
@@ -280,11 +288,34 @@ public class PrinterListActivity extends ListActivity {
                         Toast.LENGTH_SHORT).show();
                 Log.i(TAG,
                         "RefreshHashMapTask onPostExecute: Completed with an Error.");
+                TextView tv = (TextView) findViewById(R.id.printer_list_error);
+                tv.setText(REFRESH_ERROR);
             }
             setListViewData(objects);
-            TextView tv = (TextView) findViewById(R.id.printer_list_error);
-            tv.setText(REFRESH_ERROR);
+
             dialog.dismiss();
         }
+    }
+
+    /**
+     * Checks to see if user is connected to wifi or 3g
+     * 
+     * @return
+     */
+    private boolean isConnected(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = null;
+        if (connectivityManager != null) {
+
+            networkInfo = connectivityManager
+                    .getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+            if (!networkInfo.isAvailable()) {
+                networkInfo = connectivityManager
+                        .getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            }
+        }
+        return networkInfo == null ? false : networkInfo.isConnected();
     }
 }

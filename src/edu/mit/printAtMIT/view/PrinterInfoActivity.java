@@ -8,6 +8,7 @@ import com.parse.ParseQuery;
 import edu.mit.printAtMIT.R;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -36,8 +37,6 @@ public class PrinterInfoActivity extends Activity {
     private boolean favorite;
     private Button button02;
     private String id;
-    private ConnectivityManager connManager;
-    private NetworkInfo mWifi;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -85,16 +84,14 @@ public class PrinterInfoActivity extends Activity {
 
         });
 
-        connManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-        mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-
-        if (!mWifi.isConnected()) {
+        if (isConnected()) {
+            setViews();
+        } else {
             Toast.makeText(getApplicationContext(), "Network error",
                     Toast.LENGTH_SHORT).show();
             TextView tv = (TextView) findViewById(R.id.printer_info_text);
             tv.setText(REFRESH_ERROR);
-        } else {
-            setViews();
+
         }
 
         mDbAdapter.close();
@@ -133,13 +130,13 @@ public class PrinterInfoActivity extends Activity {
             button02.setText("Add to favorites");
         }
 
-        if (!mWifi.isConnected()) {
+        if (isConnected()) {
+            setViews();
+        } else {
             Toast.makeText(getApplicationContext(), "Network error",
                     Toast.LENGTH_SHORT).show();
             TextView tv = (TextView) findViewById(R.id.printer_info_text);
             tv.setText(REFRESH_ERROR);
-        } else {
-            setViews();
         }
         mDbAdapter.open();
     }
@@ -248,11 +245,15 @@ public class PrinterInfoActivity extends Activity {
         protected String doInBackground(Void... params) { // This runs on a
                                                           // different thread
             String result = "";
-            try {
-                result = refresh();
-            } catch (ParseException e) {
-                // e.printStackTrace();
-                Log.e(TAG, "RefreshTask Parse NUBFAIL");
+            if (isConnected()) {
+                try {
+                    result = refresh();
+                } catch (ParseException e) {
+                    // e.printStackTrace();
+                    Log.e(TAG, "RefreshTask Parse NUBFAIL");
+                    result = PrinterInfoActivity.REFRESH_ERROR;
+                }
+            } else {
                 result = PrinterInfoActivity.REFRESH_ERROR;
             }
             return result;
@@ -278,6 +279,28 @@ public class PrinterInfoActivity extends Activity {
             dialog.dismiss();
 
         }
+    }
+
+    /**
+     * Checks to see if user is connected to wifi or 3g
+     * 
+     * @return
+     */
+    private boolean isConnected() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) PrinterInfoActivity.this
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = null;
+        if (connectivityManager != null) {
+
+            networkInfo = connectivityManager
+                    .getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+            if (!networkInfo.isAvailable()) {
+                networkInfo = connectivityManager
+                        .getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            }
+        }
+        return networkInfo == null ? false : networkInfo.isConnected();
     }
 
 }
