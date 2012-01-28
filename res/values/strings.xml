@@ -8,4 +8,6 @@
 	<string name="about">About</string>
 	<string name="bw">Black and White</string>
 	<string name="color">Color</string>
+	<string name="list">List</string>
+	<string name="refresh">Refresh</string>
 </resources>
