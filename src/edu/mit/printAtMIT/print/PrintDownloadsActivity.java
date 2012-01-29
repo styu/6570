@@ -61,8 +61,9 @@ public class PrintDownloadsActivity extends FileViewActivity {
 				final int pos = position;
 				final View v = view;
 				// Must be correct format
-				if (fileName.endsWith(".pdf") || fileName.endsWith(".ps")
-						|| fileName.endsWith(".txt")) {
+				if (fileName.endsWith(".pdf") || fileName.endsWith(".ps") || fileName.endsWith(".txt") 
+						|| fileName.endsWith(".gif") || fileName.endsWith(".jpeg") || fileName.endsWith(".jpg")
+						|| fileName.endsWith(".png") || fileName.endsWith(".tiff") || fileName.endsWith(".bmp")) {
 
 					AlertDialog.Builder builder = new AlertDialog.Builder(view
 							.getContext());
