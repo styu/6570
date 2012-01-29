@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -23,14 +24,17 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.InputType;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -85,39 +89,72 @@ public class PrintOptionsActivity extends ListActivity {
 	private static final int ITEM_COPIES = 6;
 	private static final int ITEM_PRINT_BUTTON = 7;
 
+	private String getImageFile(Uri imageUri){
+		String[] projection = { MediaStore.Images.Media.DATA };
+		Cursor cursor = managedQuery( imageUri, projection, null, null, null );
+		int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+		cursor.moveToFirst();
+		fileLoc =  cursor.getString(column_index);
+		return fileLoc;
+	}
+	private String convertImage(String fileLoc){
+   		ImageConverterTask imageConverter = new ImageConverterTask();
+   		imageConverter.execute(new String[] { fileLoc });
+        String extStorageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
+        File f = new File(extStorageDirectory, "printAtMIT.pdf");
+		return f.getPath();
+	}
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
         Intent i = getIntent();
-        // when called from opening a file outside of app
+        // when called from opening a file or image outside of app (view intent)
         Uri data = i.getData();
         if (data != null) {
-        	Log.d("INTENT", data.toString());
-        	File f = new File(data.getPath());
-        	fileLoc = f.getPath().toString();
-        	fileName = f.getName();
+        	String scheme = data.getScheme();
+        	
+        	// opening an image
+        	if (scheme.equals("content")){
+        		fileLoc = getImageFile(data);
+        		File imgFile = new File(fileLoc);
+        		fileName = imgFile.getName();
+        		fileLoc = convertImage(fileLoc);
+        	}
+        	// opening a file
+        	if (scheme.equals("file")){
+        		File f = new File(data.getPath());
+        		fileLoc = f.getPath().toString();
+        		fileName = f.getName();
+        	}
         }
-        else{
+    	// gotten from send intent or print activity
+        else {
+        	// get url from sharing web page (send intent)
         	Bundle extras = i.getExtras();
         	String url = extras.getString("android.intent.extra.TEXT");
-           	if (url == null) {
-       			fileName = extras.getString("fileName");
+        	
+        	// Get filepath from uri from sharing image (send intent)
+        	Uri imageUri = (Uri) extras.getParcelable(Intent.EXTRA_STREAM);
+        	if (imageUri != null){
+        		fileLoc = getImageFile(imageUri);
+        		File imgFile = new File(fileLoc);
+        		fileName = imgFile.getName();
+        	}
+        	
+        	// if not a shared web page
+        	if (url == null) {
            		// gotten from print activity - pdf, ps, or txt. 
-           		if (fileName.endsWith(".pdf") || fileName.endsWith(".ps") || fileName.endsWith(".txt")){
-       				fileLoc = extras.getString("fileLoc");
-           		}
-           		// gotten from print activity - image files, need to be converted
-           		else {
-               		ImageConverterTask imageConverter = new ImageConverterTask();
-               		imageConverter.execute(new String[] { extras.getString("fileLoc") });
-                    String extStorageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
-                    File f = new File(extStorageDirectory, "printAtMIT.pdf");
-           			fileLoc = f.getPath();
+       			fileName = (fileName == null) ? extras.getString("fileName"): fileName;
+       			fileLoc = (fileLoc == null) ? extras.getString("fileLoc") : fileLoc;
+           		
+           		// gotten from print activity or send intent - image files, need to be converted
+       			if (!(fileName.endsWith(".pdf") || fileName.endsWith(".ps") || fileName.endsWith(".txt"))){
+               		fileLoc = convertImage(fileLoc);
            		}
            	}
            	else{
-            	// when called from sharing web page
+            	// when called from sharing web page (send intent)
            		UrlConverterTask urlConverter = new UrlConverterTask();
            		urlConverter.execute(new String[] { url });
                 String extStorageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
@@ -273,7 +310,7 @@ public class PrintOptionsActivity extends ListActivity {
         @Override
         protected void onPreExecute() {
             dialog = ProgressDialog.show(PrintOptionsActivity.this, "", 
-                    "Converting to PDF...", true);
+                    "Converting to PDF with PDFmyURL.com...", true);
         }
         
         @Override
