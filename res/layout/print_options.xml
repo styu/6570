@@ -9,7 +9,7 @@
     android:background="@drawable/print_button_background">
         
     <TextView android:id="@+id/print_button"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceLarge"
@@ -19,6 +19,5 @@
             android:layout_gravity="center_horizontal"
             android:fadingEdge="horizontal"
             android:textColor="@android:color/black"
-            android:padding="7dp"
-            android:text="print" />
+            android:padding="8dp" />
 </LinearLayout>

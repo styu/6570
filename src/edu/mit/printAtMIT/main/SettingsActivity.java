@@ -341,11 +341,9 @@ public class SettingsActivity extends ListActivity {
             f.delete();
 
             if (result) {
-            	finish();
                 Toast.makeText(getApplicationContext(), "Error sending, try again", Toast.LENGTH_SHORT).show();
                 Log.i("AsyncTask", "onPostExecute: Completed with an Error.");
             } else {
-            	finish();
                 Toast.makeText(getApplicationContext(), "Successfully sent", Toast.LENGTH_SHORT).show();
                 Log.i("AsyncTask", "onPostExecute: Completed.");
             }
