@@ -95,25 +95,7 @@ public class PrinterListActivity extends ListActivity {
         
         RefreshListTask task = new RefreshListTask();
         task.execute(isConnected(self));
-//        if (isConnected(self)) {
-//            ParseQuery query = new ParseQuery("PrintersData");
-//            List<ParseObject> objects = null;
-//            try {
-//                objects = query.find();
-//            } catch (ParseException e) {
-//                // swallow exception
-//                // e.printStackTrace();
-//            }
-//            setListViewData(objects);
-//        } else {
-//            Toast.makeText(getApplicationContext(), "Network error",
-//                    Toast.LENGTH_SHORT).show();
-//            setListViewData(null);
-//
-//            TextView tv = (TextView) findViewById(R.id.printer_list_error);
-//            tv.setText(REFRESH_ERROR);
-//
-//        }
+
     }
 
     @Override

@@ -1,5 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+    
+      <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="#000000"
+        android:drawSelectorOnTop="false" />
+     <RelativeLayout
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="10dp"
+         >
+         <View android:id="@+id/helper1" 
+android:layout_width="0dp"
+android:layout_height="0dp" 
+android:layout_centerHorizontal="true" 
+android:layout_centerVertical="true"/>
+    <Button
+	    android:id="@+id/favorite_button"
+	    android:background="@android:color/transparent"
+	    android:layout_weight = "0.5"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center_horizontal"
+	    android:layout_toLeftOf="@id/helper1"
+	    android:textColor="@android:color/white"
+	    />
+	<Button
+	    android:id="@+id/map_button"
+	    android:background="@android:color/transparent"
+	    android:layout_weight = "0.5"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center_horizontal"
+	    android:layout_toRightOf="@id/helper1"
+	    android:drawableTop="@drawable/ic_menu_compass"
+	    android:textColor="@android:color/white"
+	    android:text="View on Map" 
+	    />
+	</RelativeLayout>
+</LinearLayout>
+<!-- <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -24,4 +71,4 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
     
-</LinearLayout>
+</LinearLayout>-->
