@@ -2,11 +2,9 @@ package edu.mit.printAtMIT;
 
 import com.parse.Parse;
 
-import edu.mit.printAtMIT.main.LoginActivity;
-import edu.mit.printAtMIT.main.MainMenuActivity;
 import edu.mit.printAtMIT.main.SettingsActivity;
 import edu.mit.printAtMIT.print.PrintMenuActivity;
-import edu.mit.printAtMIT.view.PrinterListActivity;
+import edu.mit.printAtMIT.view.PrintListMenuActivity;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.SharedPreferences;
@@ -75,7 +73,6 @@ public class PrintAtMITActivity extends Activity {
 
         setContentView(R.layout.login);
 
-        EditText textfield = (EditText) findViewById(R.id.entry);
         Button button01 = (Button) findViewById(R.id.continue_button);
         button01.setOnClickListener(new View.OnClickListener() {
 
@@ -123,7 +120,7 @@ public class PrintAtMITActivity extends Activity {
 
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(),
-                        PrinterListActivity.class);
+                        PrintListMenuActivity.class);
                 startActivity(intent);
             }
         });

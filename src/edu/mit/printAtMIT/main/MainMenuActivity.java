@@ -14,7 +14,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import edu.mit.printAtMIT.R;
 import edu.mit.printAtMIT.print.PrintMenuActivity;
-import edu.mit.printAtMIT.view.PrinterListActivity;
+import edu.mit.printAtMIT.view.PrintListMenuActivity;
 
 /**
  * Show "print" and "view printers" buttons.
@@ -43,7 +43,7 @@ public class MainMenuActivity extends Activity{
         button02.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
-            	Intent intent = new Intent(view.getContext(), PrinterListActivity.class);
+            	Intent intent = new Intent(view.getContext(), PrintListMenuActivity.class);
             	startActivity(intent);
             }
         });

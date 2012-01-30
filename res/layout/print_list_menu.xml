@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingTop = "20dp">
+
+        <View android:id="@+id/helper1" 
+android:layout_width="0dp"
+android:layout_height="0dp" 
+android:layout_centerHorizontal="true" />
+      <RelativeLayout
+    	    android:id="@+id/dorm_list"
+    	    android:layout_weight="0.5"
+    	    android:layout_width="fill_parent"
+    	    android:layout_height="90dp"
+    	    android:gravity="center_vertical"
+    	    android:layout_toLeftOf="@id/helper1"
+   >
+	        <Button 
+    	        android:background="@android:color/transparent"
+			    android:id="@+id/dorm_list_button" 
+			    android:layout_width="fill_parent" 
+			    android:layout_height="wrap_content"
+			    android:drawableTop="@drawable/list_button"
+			    android:gravity="center_vertical|center_horizontal"
+			    android:text="Dorm Printers"
+			    android:textColor="@android:color/white"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_weight="0.5"
+            android:layout_width="fill_parent"
+            android:layout_height="90dp"
+            android:id="@+id/campus_list"
+            android:gravity="center_vertical"
+            android:layout_toRightOf="@id/helper1">
+	        <Button 
+    	        android:background="@android:color/transparent"
+			    android:id="@+id/campus_list_button" 
+			    android:layout_width="fill_parent" 
+			    android:layout_height="wrap_content"
+			    android:drawableTop="@drawable/list_button"
+			    android:gravity="center_vertical|center_horizontal"
+			    android:text="Campus Printers"
+			    android:textColor="@android:color/white"/>
+       </RelativeLayout>
+         <View android:id="@+id/helper2" 
+android:layout_width="0dp"
+android:layout_height="0dp" 
+android:layout_below="@id/helper1"
+android:layout_centerHorizontal="true" />
+      <RelativeLayout
+    	    android:id="@+id/favorite_list"
+    	    android:layout_weight="0.5"
+    	    android:layout_width="fill_parent"
+    	    android:layout_height="90dp"
+    	    android:gravity="center_vertical"
+    	    android:layout_below="@id/dorm_list"
+    	    android:layout_toLeftOf="@id/helper2"
+   >
+	        <Button 
+    	        android:background="@android:color/transparent"
+			    android:id="@+id/favorite_list_button" 
+			    android:layout_width="fill_parent" 
+			    android:layout_height="wrap_content"
+			    android:drawableTop="@drawable/favorite_button"
+			    android:gravity="center_vertical|center_horizontal"
+			    android:text="Favorites"
+			    android:textColor="@android:color/white"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_weight="0.5"
+            android:layout_width="fill_parent"
+            android:layout_height="90dp"
+            android:id="@+id/map"
+            android:gravity="center_vertical"
+            android:layout_below = '@id/campus_list'
+            android:layout_toRightOf="@id/helper2">
+	        <Button 
+    	        android:background="@android:color/transparent"
+			    android:id="@+id/map_button" 
+			    android:layout_width="fill_parent" 
+			    android:layout_height="wrap_content"
+			    android:drawableTop="@drawable/map_button"
+			    android:gravity="center_vertical|center_horizontal"
+			    android:text="View Map"
+			    android:textColor="@android:color/white"/>
+       </RelativeLayout>
+          <View android:id="@+id/helper3" 
+android:layout_width="0dp"
+android:layout_height="0dp" 
+android:layout_below="@id/helper2"
+android:layout_centerHorizontal="true" />
+      <RelativeLayout
+    	    android:id="@+id/complete_list"
+    	    android:layout_weight="0.5"
+    	    android:layout_width="fill_parent"
+    	    android:layout_height="90dp"
+    	    android:gravity="center_vertical"
+    	    android:layout_below="@id/favorite_list"
+    	    android:layout_toLeftOf="@id/helper2"
+   >
+	        <Button 
+    	        android:background="@android:color/transparent"
+			    android:id="@+id/complete_list_button" 
+			    android:layout_width="fill_parent" 
+			    android:layout_height="wrap_content"
+			    android:drawableTop="@drawable/list_button"
+			    android:gravity="center_vertical|center_horizontal"
+			    android:text="All Printers"
+			    android:textColor="@android:color/white"/>
+        </RelativeLayout>
+
+</RelativeLayout>
