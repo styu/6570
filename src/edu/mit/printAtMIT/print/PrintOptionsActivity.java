@@ -49,7 +49,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import edu.mit.printAtMIT.PrintAtMITActivity;
 import edu.mit.printAtMIT.R;
-import edu.mit.printAtMIT.list.ButtonItem;
 import edu.mit.printAtMIT.list.EntryAdapter;
 import edu.mit.printAtMIT.list.EntryItem;
 import edu.mit.printAtMIT.list.Item;
@@ -103,6 +102,19 @@ public class PrintOptionsActivity extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.print_options);
+        
+        Button btnStart = (Button) findViewById(R.id.print_button);
+
+        btnStart.setOnClickListener(new View.OnClickListener() {
+ 			
+ 			@Override
+ 			public void onClick(View v) {
+ 				ConvertAndPrintTask printTask = new ConvertAndPrintTask();
+                 printTask.execute();
+ 				
+ 			}
+ 		});
         
         Intent i = getIntent();
         // when called from opening a file or image outside of app (view intent)
@@ -177,7 +189,7 @@ public class PrintOptionsActivity extends ListActivity {
         items.add(new EntryItem("Ink Color", userSettings.getString(PrintAtMITActivity.INKCOLOR, PrintAtMITActivity.BLACKWHITE), ITEM_INKCOLOR));
         items.add(new EntryItem("Copies", ""+userSettings.getInt(PrintAtMITActivity.COPIES, 1), ITEM_COPIES));
         
-        items.add(new ButtonItem("Print", ITEM_PRINT_BUTTON));
+        //items.add(new ButtonItem("Print", ITEM_PRINT_BUTTON));
         //items.add(new EntryItem("Print", "", ITEM_PRINT_BUTTON));
         EntryAdapter adapter = new EntryAdapter(this, items);
         
@@ -185,9 +197,6 @@ public class PrintOptionsActivity extends ListActivity {
         
         //this.getLayoutInflater().inflate(R.layout.print_options, getListView());
         
-        //btnStart = (Button) (this.getListView(). findViewById(R.id.printbutton));
-
-        //btnStart.setOnClickListener(btnStartListener);
         
         //textStatus = (TextView)findViewById(R.id.textStatus);
     }
@@ -371,11 +380,11 @@ public class PrintOptionsActivity extends ListActivity {
 				alert.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
 	        	break;
-
+	        /*
     		case ITEM_PRINT_BUTTON:
     			ConvertAndPrintTask printTask = new ConvertAndPrintTask();
                 printTask.execute();
-                break;
+                break;*/
     		default: Toast.makeText(this, "herp derp", Toast.LENGTH_SHORT).show(); break;
     		}
     		

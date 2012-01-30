@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" 
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:divider="#00000000" 
-    android:padding="15dp"
-    android:background="@drawable/print_button_background">
-        
-    <TextView android:id="@+id/print_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:ellipsize="marquee"
-            android:background="@drawable/print_button"
-            android:gravity="center_horizontal"
-            android:layout_gravity="center_horizontal"
-            android:fadingEdge="horizontal"
-            android:textColor="@android:color/black"
-            android:padding="8dp" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+    
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="#000000"
+        android:drawSelectorOnTop="false" />
+	<Button
+	    android:id="@+id/print_button"
+	    android:layout_width="100dp"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center_horizontal"
+	    android:text="Print" 
+	    />
+
 </LinearLayout>

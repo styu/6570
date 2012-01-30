@@ -95,7 +95,7 @@ public class EntryAdapter extends ArrayAdapter<Item> {
                     title.setText(ei.title);
                 if (subtitle != null)
                     subtitle.setText(ei.subtitle);
-            } else {
+            } /*else {
                 ButtonItem bi = (ButtonItem) i;
 
                 v = vi.inflate(R.layout.print_options, null);
@@ -105,7 +105,7 @@ public class EntryAdapter extends ArrayAdapter<Item> {
                 if (printButton != null) {
                     printButton.setText(bi.title);
                 }
-            }
+            }*/
         }
         return v;
     }
