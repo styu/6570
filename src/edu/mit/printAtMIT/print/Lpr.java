@@ -165,10 +165,6 @@ public class Lpr {
 		controlFile += ((printRaw) ? "o" : "p") + "dfA" + strJobNumber
 				+ hostName + "\n";
 		
-		controlFile += "lfa" + strJobNumber + userName + "\n";
-		controlFile += "lfa" + strJobNumber + userName + "\n";
-		controlFile += "lfa" + strJobNumber + userName + "\n";
-		
 		controlFile += "UdfA" + strJobNumber + hostName + "\n";
 		controlFile += "N" + documentName + "\n";
 

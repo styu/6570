@@ -14,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 import edu.mit.printAtMIT.R;
 import edu.mit.printAtMIT.main.MainMenuActivity;
 import edu.mit.printAtMIT.main.SettingsActivity;
@@ -69,7 +68,6 @@ public class PrintMenuActivity extends Activity {
 	            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
 	            String filePath = cursor.getString(columnIndex);
 	            cursor.close();
-                Toast.makeText(getApplicationContext(), filePath, Toast.LENGTH_SHORT).show();
                 File f = new File(filePath);
 	            //Bitmap yourSelectedImage = BitmapFactory.decodeFile(filePath);
                 

@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -24,7 +23,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -401,8 +399,6 @@ public class PrintOptionsActivity extends ListActivity {
     @Override
     public boolean onContextItemSelected(MenuItem item)
     {
-    	SharedPreferences userSettings = getSharedPreferences(PrintAtMITActivity.PREFS_NAME, MODE_PRIVATE);
-    	SharedPreferences.Editor editor = userSettings.edit();
     	EntryAdapter adapter;
     	//changes user preference based on what user has selected
        switch(item.getItemId())
