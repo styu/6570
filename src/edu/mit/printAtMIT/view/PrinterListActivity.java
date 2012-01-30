@@ -22,7 +22,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,7 +51,8 @@ public class PrinterListActivity extends ListActivity {
     private static final String REFRESH_ERROR = "Error connecting to network, please try again later";
     private static final int REFRESH_ID = Menu.FIRST;
     
-    private Map<String, PrinterEntryItem> map = new HashMap<String, PrinterEntryItem>();
+    private Map<String, PrinterEntryItem> curr_map = new HashMap<String, PrinterEntryItem>();
+    private Map<String, PrinterEntryItem> all_map = new HashMap<String, PrinterEntryItem>();
     private PrintersDbAdapter mDbAdapter;
     private PrinterComparator comparator = new PrinterComparator();
     private final Context self = PrinterListActivity.this;
@@ -70,6 +70,8 @@ public class PrinterListActivity extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i("PrinterListActivity", "Calling onCreate()");
+
         Parse.initialize(this, "KIb9mNtPKDtkDk7FJ9W6b7MiAr925a10vNuCPRer",
                 "dSFuQYQXSvslh9UdznzzS9Vb0kDgcKnfzgglLUHT");
         setContentView(R.layout.printer_list);
@@ -82,9 +84,9 @@ public class PrinterListActivity extends ListActivity {
         	editor.putString(PrintListMenuActivity.LIST_TYPE, getIntent().getStringExtra(PrintListMenuActivity.LIST_TYPE));
         	editor.commit();
         }
+        mDbAdapter = new PrintersDbAdapter(this);
         /*
         Button button01 = (Button) findViewById(R.id.button01);
-        mDbAdapter = new PrintersDbAdapter(this);
 
         button01.setOnClickListener(new View.OnClickListener() {
 
@@ -95,51 +97,35 @@ public class PrinterListActivity extends ListActivity {
                 startActivity(intent);
             }
         });*/
-        if (isConnected(self)) {
-            ParseQuery query = new ParseQuery("PrintersData");
-            List<ParseObject> objects = null;
-            try {
-                objects = query.find();
-            } catch (ParseException e) {
-                // swallow exception
-                // e.printStackTrace();
-            }
-            setListViewData(objects);
-        } else {
-            Toast.makeText(getApplicationContext(), "Network error",
-                    Toast.LENGTH_SHORT).show();
-            setListViewData(null);
-
-            TextView tv = (TextView) findViewById(R.id.printer_list_error);
-            tv.setText(REFRESH_ERROR);
-
-        }
+        
+        RefreshListTask task = new RefreshListTask();
+        task.execute(isConnected(self));
+//        if (isConnected(self)) {
+//            ParseQuery query = new ParseQuery("PrintersData");
+//            List<ParseObject> objects = null;
+//            try {
+//                objects = query.find();
+//            } catch (ParseException e) {
+//                // swallow exception
+//                // e.printStackTrace();
+//            }
+//            setListViewData(objects);
+//        } else {
+//            Toast.makeText(getApplicationContext(), "Network error",
+//                    Toast.LENGTH_SHORT).show();
+//            setListViewData(null);
+//
+//            TextView tv = (TextView) findViewById(R.id.printer_list_error);
+//            tv.setText(REFRESH_ERROR);
+//
+//        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         Log.i("PrinterListActivity", "Calling onResume()");
-        // RefreshListTask task = new RefreshListTask();
-        // task.execute();
-        if (isConnected(self)) {
-            ParseQuery query = new ParseQuery("PrintersData");
-            List<ParseObject> objects = null;
-            try {
-                objects = query.find();
-            } catch (ParseException e) {
-                // swallow exception
-                // e.printStackTrace();
-            }
-            setListViewData(objects);
-        } else {
-            setListViewData(null);
-            Toast.makeText(getApplicationContext(), "Network error",
-                    Toast.LENGTH_SHORT).show();
-            TextView tv = (TextView) findViewById(R.id.printer_list_error);
-            tv.setText(REFRESH_ERROR);
-        }
+
     }
 
     @Override
@@ -177,20 +163,24 @@ public class PrinterListActivity extends ListActivity {
         tv.setText("");
         // resets map if not null
         if (objects != null) {
-            map = new HashMap<String, PrinterEntryItem>();
+            curr_map = new HashMap<String, PrinterEntryItem>();
+            all_map = new HashMap<String, PrinterEntryItem>();
             for (ParseObject o : objects) {
+                all_map.put(o.getObjectId(), new PrinterEntryItem(o.getObjectId(),
+                            o.getString("printerName"), o.getString("location"),
+                            Integer.parseInt(o.getString("status"))));
             	if (listType.equals(PrintListMenuActivity.LIST_ALL)) {
             		PrinterEntryItem item = new PrinterEntryItem(o.getObjectId(),
                             o.getString("printerName"), o.getString("location"),
                             Integer.parseInt(o.getString("status")));
-                    map.put(o.getObjectId(), item);
+                    curr_map.put(o.getObjectId(), item);
             	}
             	else if (listType.equals(PrintListMenuActivity.LIST_DORM)) {
             		if (o.getBoolean("residence")) {
             			PrinterEntryItem item = new PrinterEntryItem(o.getObjectId(),
                                 o.getString("printerName"), o.getString("location"),
                                 Integer.parseInt(o.getString("status")));
-                        map.put(o.getObjectId(), item);
+                        curr_map.put(o.getObjectId(), item);
             		}
             	}
             	else if (listType.equals(PrintListMenuActivity.LIST_CAMPUS)) {
@@ -198,24 +188,15 @@ public class PrinterListActivity extends ListActivity {
             			PrinterEntryItem item = new PrinterEntryItem(o.getObjectId(),
                                 o.getString("printerName"), o.getString("location"),
                                 Integer.parseInt(o.getString("status")));
-                        map.put(o.getObjectId(), item);
+                        curr_map.put(o.getObjectId(), item);
             		}
             	}
             	else {
             		PrinterEntryItem item = new PrinterEntryItem(o.getObjectId(),
                             o.getString("printerName"), o.getString("location"),
                             Integer.parseInt(o.getString("status")));
-                    map.put(o.getObjectId(), item);
+                    curr_map.put(o.getObjectId(), item);
             	}
-                /*if (o.getBoolean("residence")) {
-                    Log.i(TAG, o.getString("printerName") + " residence");
-                } else {
-                    Log.i(TAG, o.getString("printerName") + " NOT RESIDENCE");
-                }
-                PrinterEntryItem item = new PrinterEntryItem(o.getObjectId(),
-                        o.getString("printerName"), o.getString("location"),
-                        Integer.parseInt(o.getString("status")));
-                map.put(o.getObjectId(), item);*/
             }
         } else {
 //            // changes all status to unknown
@@ -227,29 +208,30 @@ public class PrinterListActivity extends ListActivity {
 //                map = tmp;
 //            }
             //handle error
-            map = new HashMap<String, PrinterEntryItem>();
+            curr_map = new HashMap<String, PrinterEntryItem>();
         }
 
         final List<Item> items = new ArrayList<Item>();
-       //items.add(new SectionItem("Favorites"));
-       // mDbAdapter.open();
-
-        /*List<String> ids = mDbAdapter.getFavorites();
-        List<PrinterEntryItem> favorites = new ArrayList<PrinterEntryItem>();
-        for (String id : ids) {
-            if (map.containsKey(id)) {
-                favorites.add(map.get(id));
-            }
-        }
-        Collections.sort(favorites, comparator);
-        for (PrinterEntryItem item : favorites) {
-            items.add(item);
-        }*/
         items.add(new SectionItem(listType+" Printers"));
+        List<PrinterEntryItem> printers = null;
+        if (listType.equals(PrintListMenuActivity.LIST_FAVORITE)) {
+            mDbAdapter.open();
+            List<String> ids = mDbAdapter.getFavorites();
+            printers = new ArrayList<PrinterEntryItem>();
+            for (String id : ids) {
+                if (all_map.containsKey(id)) {
+                    printers.add(all_map.get(id));
+                }
+            }
+            mDbAdapter.close();
 
-        List<PrinterEntryItem> printers = new ArrayList<PrinterEntryItem>(
-                map.values());
+        }
+        else {
+            printers = new ArrayList<PrinterEntryItem>(curr_map.values());
+
+        }
         Collections.sort(printers, comparator);
+
 
         for (PrinterEntryItem item : printers) {
             items.add(item);
@@ -258,7 +240,6 @@ public class PrinterListActivity extends ListActivity {
         Log.i(TAG, new Integer(items.size()).toString());
         EntryAdapter adapter = new EntryAdapter(this, (ArrayList<Item>) items);
         setListAdapter(adapter);
-        //mDbAdapter.close();
 
         ListView lv = getListView();
         lv.setTextFilterEnabled(true);

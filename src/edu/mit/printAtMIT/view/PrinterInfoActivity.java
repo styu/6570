@@ -84,20 +84,13 @@ public class PrinterInfoActivity extends Activity {
 
         });
 
-        if (isConnected()) {
-            setViews();
-        } else {
-            Toast.makeText(getApplicationContext(), "Network error",
-                    Toast.LENGTH_SHORT).show();
-            TextView tv = (TextView) findViewById(R.id.printer_info_text);
-            tv.setText(REFRESH_ERROR);
-
-        }
+        RefreshTask task = new RefreshTask();
+        task.execute();
 
         mDbAdapter.close();
     }
 
-    private void setViews() {
+    /*private void setViews() {
         String result = "";
         try {
             result = refresh();
@@ -111,7 +104,7 @@ public class PrinterInfoActivity extends Activity {
         }
         TextView tv = (TextView) findViewById(R.id.printer_info_text);
         tv.setText(result);
-    }
+    }*/
 
     @Override
     protected void onPause() {
@@ -130,14 +123,6 @@ public class PrinterInfoActivity extends Activity {
             button02.setText("Add to favorites");
         }
 
-        if (isConnected()) {
-            setViews();
-        } else {
-            Toast.makeText(getApplicationContext(), "Network error",
-                    Toast.LENGTH_SHORT).show();
-            TextView tv = (TextView) findViewById(R.id.printer_info_text);
-            tv.setText(REFRESH_ERROR);
-        }
         mDbAdapter.open();
     }
 
