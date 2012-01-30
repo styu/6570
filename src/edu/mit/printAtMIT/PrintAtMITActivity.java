@@ -34,4 +34,12 @@ public class PrintAtMITActivity extends Activity {
         	startActivity(intent);
         }
     }
+    
+    private void startLoginActivity() {
+        
+    }
+    
+    private void startMainMenuActivity() {
+        
+    }
 }

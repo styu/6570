@@ -145,6 +145,8 @@ public class PrinterMapActivity extends MapActivity {
             intent = new Intent(
                     findViewById(android.R.id.content).getContext(),
                     MainMenuActivity.class);
+            intent.putExtra("activity", "home_button");
+
             startActivity(intent);
             return true;
         case R.id.setting:

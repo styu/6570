@@ -82,6 +82,7 @@ public class MainMenuActivity extends Activity{
         }
     }
     
+    
     @Override
     public void onBackPressed() {
        Intent intent = getIntent();
@@ -89,8 +90,12 @@ public class MainMenuActivity extends Activity{
        if (activity.equals("start")) {
     	   return;
        }
+       else if (activity.equals("home_button")) {
+           return;
+       }
        else {
     	   super.onBackPressed();
        }
     }
+
 }
