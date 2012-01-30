@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class EntryAdapter extends ArrayAdapter<Item> {
@@ -49,13 +50,44 @@ public class EntryAdapter extends ArrayAdapter<Item> {
             } else if (i.isPrinterEntry()) {
                 PrinterEntryItem pei = (PrinterEntryItem) i;
                 //TODO: make new layout for printer entries that show printer name, printer location, and printer status
-                v = vi.inflate(R.layout.list_item, null);
-                final TextView text = (TextView) v.findViewById(R.id.list_item_text);
-                if (text != null) {
+                v = vi.inflate(R.layout.printer_list_item_entry, null);
+                //final TextView text = (TextView) v.findViewById(R.id.list_item_text);
+                
+                final TextView printerName = (TextView) v
+                        .findViewById(R.id.list_item_printer_name);
+                final TextView printerLocation = (TextView) v
+                        .findViewById(R.id.list_item_printer_location);
+                final TextView printerStatus = (TextView) v
+                		.findViewById(R.id.list_item_printer_status);
+                
+                if (printerName != null)
+                	printerName.setText(pei.printerName);
+                if (printerLocation != null)
+                	printerLocation.setText(pei.location);
+                if (printerStatus != null) {
+                	String status = pei.getStatusString();
+                	printerStatus.setText(status);
+                	ImageView circle = (ImageView) v.findViewById(R.id.status_dot);
+                	
+                	if (status.equals(PrinterEntryItem.READY)) {
+                		circle.setImageResource(R.drawable.green_dot);
+                	}
+                	else if (status.equals(PrinterEntryItem.BUSY)) {
+                		circle.setImageResource(R.drawable.yellow_dot);
+                	}
+                	else if (status.equals(PrinterEntryItem.ERROR)) {
+                		circle.setImageResource(R.drawable.red_dot);
+                	}
+                	else {
+                		circle.setImageResource(R.drawable.grey_dot);
+                	}
+                }
+                
+                /*if (text != null) {
 //                    text.setText(pei.printerName + "\t\t" + pei.location + "\t\t" + new Integer(pei.status).toString());
                     text.setText(pei.printerName + "\t\t" + pei.location + "\t\t" + pei.getStatusString());
 
-                }
+                }*/
             } else if (!i.isButton()) {
                 EntryItem ei = (EntryItem) i;
                 v = vi.inflate(R.layout.list_item_entry, null);

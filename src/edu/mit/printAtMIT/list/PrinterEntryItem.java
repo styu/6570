@@ -13,6 +13,11 @@ public class PrinterEntryItem implements Item {
     public final String location;
     public int status;
     
+    public static final String BUSY = "Busy";
+    public static final String READY = "Ready";
+    public static final String ERROR = "Error";
+    public static final String UNKNOWN = "Unknown";
+    
     public PrinterEntryItem(String parseId, String printer, String location, int status) {
         this.parseId = parseId;
         this.printerName = printer;
@@ -40,10 +45,10 @@ public class PrinterEntryItem implements Item {
         int status = this.status;
         String string = "";
         switch(status) {
-            case 0: string = "Ready"; break;
-            case 1: string = "Busy"; break;
-            case 2: string = "Error"; break;
-            case 3: string = "Unknown"; break;
+            case 0: string = PrinterEntryItem.READY; break; //green
+            case 1: string = PrinterEntryItem.BUSY; break; //yellow
+            case 2: string = PrinterEntryItem.ERROR; break; //error
+            case 3: string = PrinterEntryItem.UNKNOWN; break; //grey
             default: Log.e("PrinterEntryItem", "Invalid printer status, thos hast problems"); break;
         }
         return string;
