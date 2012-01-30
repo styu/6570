@@ -83,19 +83,19 @@ public class MainMenuActivity extends Activity{
     }
     
     
-    @Override
-    public void onBackPressed() {
-       Intent intent = getIntent();
-       String activity = intent.getStringExtra("activity");
-       if (activity.equals("start")) {
-    	   return;
-       }
-       else if (activity.equals("home_button")) {
-           return;
-       }
-       else {
-    	   super.onBackPressed();
-       }
-    }
+//    @Override
+//    public void onBackPressed() {
+//       Intent intent = getIntent();
+//       String activity = intent.getStringExtra("activity");
+//       if (activity.equals("start")) {
+//    	   return;
+//       }
+//       else if (activity.equals("home_button")) {
+//           return;
+//       }
+//       else {
+//    	   super.onBackPressed();
+//       }
+//    }
 
 }
