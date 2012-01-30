@@ -81,8 +81,11 @@ public class PrinterListActivity extends ListActivity {
 
         if (extras != null) {
         	SharedPreferences.Editor editor = listType.edit();
-        	editor.putString(PrintListMenuActivity.LIST_TYPE, getIntent().getStringExtra(PrintListMenuActivity.LIST_TYPE));
+        	String type = getIntent().getStringExtra(PrintListMenuActivity.LIST_TYPE);
+        	editor.putString(PrintListMenuActivity.LIST_TYPE, type);
         	editor.commit();
+        	
+        	setTitle(type + " Printers");
         }
         mDbAdapter = new PrintersDbAdapter(this);
         /*
@@ -212,7 +215,6 @@ public class PrinterListActivity extends ListActivity {
         }
 
         final List<Item> items = new ArrayList<Item>();
-        items.add(new SectionItem(listType+" Printers"));
         List<PrinterEntryItem> printers = null;
         if (listType.equals(PrintListMenuActivity.LIST_FAVORITE)) {
             mDbAdapter.open();
@@ -232,7 +234,9 @@ public class PrinterListActivity extends ListActivity {
         }
         Collections.sort(printers, comparator);
 
-
+        if (printers.size() == 0 && listType.equals(PrintListMenuActivity.LIST_FAVORITE)) {
+        	items.add(new SectionItem("No favorites to display"));
+        }
         for (PrinterEntryItem item : printers) {
             items.add(item);
         }
