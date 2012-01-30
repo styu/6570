@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Comparator;
 import java.util.Map;
 
+import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -18,6 +19,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -36,6 +38,8 @@ import edu.mit.printAtMIT.list.EntryAdapter;
 import edu.mit.printAtMIT.list.Item;
 import edu.mit.printAtMIT.list.PrinterEntryItem;
 import edu.mit.printAtMIT.list.SectionItem;
+import edu.mit.printAtMIT.main.MainMenuActivity;
+import edu.mit.printAtMIT.main.SettingsActivity;
 
 /**
  * Lists all the printers from database. Shows name, location, status from each
@@ -88,18 +92,6 @@ public class PrinterListActivity extends ListActivity {
         	setTitle(type + " Printers");
         }
         mDbAdapter = new PrintersDbAdapter(this);
-        /*
-        Button button01 = (Button) findViewById(R.id.button01);
-
-        button01.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(),
-                        PrinterMapActivity.class);
-                intent.putExtra("allPrinterView", true);
-                startActivity(intent);
-            }
-        });*/
         
         RefreshListTask task = new RefreshListTask();
         task.execute(isConnected(self));
@@ -136,25 +128,47 @@ public class PrinterListActivity extends ListActivity {
         super.onPause();
         Log.i("PrinterListActivity", "Calling onPause()");
     }
-
+    
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        menu.add(0, REFRESH_ID, 0, "Refresh");
-        return true;
-    }
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.printlist_menu, menu);
+		return true;
+	}
 
-    @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
-        switch (item.getItemId()) {
-        case REFRESH_ID:
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		Intent intent;
+		switch (item.getItemId()) {
+		case R.id.refresh:
             RefreshListTask task = new RefreshListTask();
             task.execute(isConnected(self));
             return true;
-        }
+		case R.id.home:
+			intent = new Intent(
+					findViewById(android.R.id.content).getContext(),
+					MainMenuActivity.class);
+			startActivity(intent);
+			return true;
+		case R.id.setting:
+			intent = new Intent(
+					findViewById(android.R.id.content).getContext(),
+					SettingsActivity.class);
+			startActivity(intent);
+			return true;
+		case R.id.about:
+			Dialog dialog = new Dialog(this);
 
-        return super.onMenuItemSelected(featureId, item);
-    }
+			dialog.setContentView(R.layout.about_dialog);
+			dialog.setTitle("About");
+			dialog.show();
+			super.onOptionsItemSelected(item);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
 
     /**
      * Sets Views Should be called in UI thread
@@ -162,8 +176,6 @@ public class PrinterListActivity extends ListActivity {
     private void setListViewData(List<ParseObject> objects) {
     	SharedPreferences listSettings = getPreferences(MODE_PRIVATE);
     	String listType = listSettings.getString(PrintListMenuActivity.LIST_TYPE, PrintListMenuActivity.LIST_ALL);
-        TextView tv = (TextView) findViewById(R.id.printer_list_error);
-        tv.setText("");
         // resets map if not null
         if (objects != null) {
             curr_map = new HashMap<String, PrinterEntryItem>();
@@ -315,8 +327,6 @@ public class PrinterListActivity extends ListActivity {
                         Toast.LENGTH_SHORT).show();
                 Log.i(TAG,
                         "RefreshHashMapTask onPostExecute: Completed with an Error.");
-                TextView tv = (TextView) findViewById(R.id.printer_list_error);
-                tv.setText(REFRESH_ERROR);
             }
             setListViewData(objects);
 

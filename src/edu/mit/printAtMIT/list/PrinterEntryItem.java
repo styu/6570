@@ -14,7 +14,7 @@ public class PrinterEntryItem implements Item {
     public int status;
     
     public static final String BUSY = "Busy";
-    public static final String READY = "Ready";
+    public static final String READY = "Available";
     public static final String ERROR = "Error";
     public static final String UNKNOWN = "Unknown";
     

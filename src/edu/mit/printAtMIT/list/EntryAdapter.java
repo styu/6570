@@ -3,16 +3,11 @@ package edu.mit.printAtMIT.list;
 import java.util.ArrayList;
 
 import edu.mit.printAtMIT.R;
-import edu.mit.printAtMIT.print.PrintMenuActivity;
-import edu.mit.printAtMIT.print.PrintOptionsActivity.PrintTask;
-
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 

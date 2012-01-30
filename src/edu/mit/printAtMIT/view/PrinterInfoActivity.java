@@ -6,7 +6,11 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import edu.mit.printAtMIT.R;
+import edu.mit.printAtMIT.main.MainMenuActivity;
+import edu.mit.printAtMIT.main.SettingsActivity;
+import edu.mit.printAtMIT.view.PrinterListActivity.RefreshListTask;
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +20,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -127,23 +132,45 @@ public class PrinterInfoActivity extends Activity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        menu.add(0, REFRESH_ID, 0, "Refresh");
-        return true;
-    }
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.printlist_menu, menu);
+		return true;
+	}
 
-    @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
-        switch (item.getItemId()) {
-        case REFRESH_ID:
-            RefreshTask task = new RefreshTask();
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		Intent intent;
+		switch (item.getItemId()) {
+		case R.id.refresh:
+			RefreshTask task = new RefreshTask();
             task.execute();
             return true;
-        }
+		case R.id.home:
+			intent = new Intent(
+					findViewById(android.R.id.content).getContext(),
+					MainMenuActivity.class);
+			startActivity(intent);
+			return true;
+		case R.id.setting:
+			intent = new Intent(
+					findViewById(android.R.id.content).getContext(),
+					SettingsActivity.class);
+			startActivity(intent);
+			return true;
+		case R.id.about:
+			Dialog dialog = new Dialog(this);
 
-        return super.onMenuItemSelected(featureId, item);
-    }
+			dialog.setContentView(R.layout.about_dialog);
+			dialog.setTitle("About");
+			dialog.show();
+			super.onOptionsItemSelected(item);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
 
     /**
      * Refreshes printer data Sets Textview.
