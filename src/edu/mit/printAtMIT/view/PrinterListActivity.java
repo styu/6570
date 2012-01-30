@@ -95,25 +95,6 @@ public class PrinterListActivity extends ListActivity {
         
         RefreshListTask task = new RefreshListTask();
         task.execute(isConnected(self));
-//        if (isConnected(self)) {
-//            ParseQuery query = new ParseQuery("PrintersData");
-//            List<ParseObject> objects = null;
-//            try {
-//                objects = query.find();
-//            } catch (ParseException e) {
-//                // swallow exception
-//                // e.printStackTrace();
-//            }
-//            setListViewData(objects);
-//        } else {
-//            Toast.makeText(getApplicationContext(), "Network error",
-//                    Toast.LENGTH_SHORT).show();
-//            setListViewData(null);
-//
-//            TextView tv = (TextView) findViewById(R.id.printer_list_error);
-//            tv.setText(REFRESH_ERROR);
-//
-//        }
     }
 
     @Override
@@ -181,19 +162,24 @@ public class PrinterListActivity extends ListActivity {
             curr_map = new HashMap<String, PrinterEntryItem>();
             all_map = new HashMap<String, PrinterEntryItem>();
             for (ParseObject o : objects) {
+                //COMMON NAME
+                StringBuilder location = new StringBuilder(o.getString("location"));
+                if (o.getString("commonName") != null && o.getString("commonName").length() != 0) {
+                    location.append("(" + o.getString("commonName") + ")");
+                }
                 all_map.put(o.getObjectId(), new PrinterEntryItem(o.getObjectId(),
-                            o.getString("printerName"), o.getString("location"),
+                            o.getString("printerName"), location.toString(),
                             Integer.parseInt(o.getString("status"))));
             	if (listType.equals(PrintListMenuActivity.LIST_ALL)) {
             		PrinterEntryItem item = new PrinterEntryItem(o.getObjectId(),
-                            o.getString("printerName"), o.getString("location"),
+                            o.getString("printerName"), location.toString(),
                             Integer.parseInt(o.getString("status")));
                     curr_map.put(o.getObjectId(), item);
             	}
             	else if (listType.equals(PrintListMenuActivity.LIST_DORM)) {
             		if (o.getBoolean("residence")) {
             			PrinterEntryItem item = new PrinterEntryItem(o.getObjectId(),
-                                o.getString("printerName"), o.getString("location"),
+                                o.getString("printerName"), location.toString(),
                                 Integer.parseInt(o.getString("status")));
                         curr_map.put(o.getObjectId(), item);
             		}
@@ -201,27 +187,19 @@ public class PrinterListActivity extends ListActivity {
             	else if (listType.equals(PrintListMenuActivity.LIST_CAMPUS)) {
             		if (!o.getBoolean("residence")) {
             			PrinterEntryItem item = new PrinterEntryItem(o.getObjectId(),
-                                o.getString("printerName"), o.getString("location"),
+                                o.getString("printerName"), location.toString(),
                                 Integer.parseInt(o.getString("status")));
                         curr_map.put(o.getObjectId(), item);
             		}
             	}
             	else {
             		PrinterEntryItem item = new PrinterEntryItem(o.getObjectId(),
-                            o.getString("printerName"), o.getString("location"),
+                            o.getString("printerName"), location.toString(),
                             Integer.parseInt(o.getString("status")));
                     curr_map.put(o.getObjectId(), item);
             	}
             }
         } else {
-//            // changes all status to unknown
-//            Map<String, PrinterEntryItem> tmp = new HashMap<String, PrinterEntryItem>();
-//            for (String key : map.keySet()) {
-//                PrinterEntryItem item = map.get(key);
-//                tmp.put(key, new PrinterEntryItem(item.parseId,
-//                        item.printerName, item.location, item.status));
-//                map = tmp;
-//            }
             //handle error
             curr_map = new HashMap<String, PrinterEntryItem>();
         }
