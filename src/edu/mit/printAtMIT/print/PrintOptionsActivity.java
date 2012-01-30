@@ -380,11 +380,6 @@ public class PrintOptionsActivity extends ListActivity {
 				alert.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
 	        	break;
-	        /*
-    		case ITEM_PRINT_BUTTON:
-    			ConvertAndPrintTask printTask = new ConvertAndPrintTask();
-                printTask.execute();
-                break;*/
     		default: Toast.makeText(this, "herp derp", Toast.LENGTH_SHORT).show(); break;
     		}
     		

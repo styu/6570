@@ -63,7 +63,37 @@ public class SettingsActivity extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+        setContentView(R.layout.setting_layout);
+        Button btn = (Button) findViewById(R.id.print_button);
+        btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				String intStorageDirectory = getFilesDir().toString();
+    	        File f = new File(intStorageDirectory, "printAtMIT_testPage.pdf");
+    	        
+		        InputStream in = null;
+		        OutputStream out = null;
+		        try {
+		          in = getAssets().open("printAtMIT_testPage.pdf");
+		          out = new FileOutputStream(f.getPath());
+		          copyFile(in, out);
+		          in.close();
+		          in = null;
+		          out.flush();
+		          out.close();
+		          out = null;
+		        } catch(Exception e) {
+		            Log.e("AssetTransfer", e.getMessage());
+		        }       
+    	        
+    	        fileLoc = f.getPath();
+    	        fileName = f.getName();
+    			PrintTask printTask = new PrintTask();
+                printTask.execute();
+				
+			}
+		});
         SharedPreferences userSettings = getSharedPreferences(PrintAtMITActivity.PREFS_NAME, MODE_PRIVATE);
         items.add(new SectionItem("User info"));
         items.add(new EntryItem("Change Kerberos Id", userSettings.getString(PrintAtMITActivity.USERNAME, ""), ITEM_USERNAME));
@@ -71,7 +101,7 @@ public class SettingsActivity extends ListActivity {
         items.add(new SectionItem("Printer Preferences"));
         items.add(new EntryItem("Ink Color", userSettings.getString(PrintAtMITActivity.INKCOLOR, PrintAtMITActivity.BLACKWHITE), ITEM_INKCOLOR));
         items.add(new EntryItem("Copies", ""+userSettings.getInt(PrintAtMITActivity.COPIES, 1), ITEM_COPIES));
-        items.add(new ButtonItem("Print Test Page", ITEM_PRINT_BUTTON));
+        //items.add(new ButtonItem("Print Test Page", ITEM_PRINT_BUTTON));
 
         EntryAdapter adapter = new EntryAdapter(this, items);
         
@@ -258,30 +288,6 @@ public class SettingsActivity extends ListActivity {
           	  alert.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
           	  break;
-    		case ITEM_PRINT_BUTTON:
-    			String intStorageDirectory = getFilesDir().toString();
-    	        File f = new File(intStorageDirectory, "printAtMIT_testPage.pdf");
-    	        
-		        InputStream in = null;
-		        OutputStream out = null;
-		        try {
-		          in = getAssets().open("printAtMIT_testPage.pdf");
-		          out = new FileOutputStream(f.getPath());
-		          copyFile(in, out);
-		          in.close();
-		          in = null;
-		          out.flush();
-		          out.close();
-		          out = null;
-		        } catch(Exception e) {
-		            Log.e("AssetTransfer", e.getMessage());
-		        }       
-    	        
-    	        fileLoc = f.getPath();
-    	        fileName = f.getName();
-    			PrintTask printTask = new PrintTask();
-                printTask.execute();
-                break;
     		default: Toast.makeText(this, "herp derp", Toast.LENGTH_SHORT).show(); break;
     		}
     		

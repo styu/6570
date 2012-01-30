@@ -77,12 +77,6 @@ public class EntryAdapter extends ArrayAdapter<Item> {
                 		circle.setImageResource(R.drawable.grey_dot);
                 	}
                 }
-                
-                /*if (text != null) {
-//                    text.setText(pei.printerName + "\t\t" + pei.location + "\t\t" + new Integer(pei.status).toString());
-                    text.setText(pei.printerName + "\t\t" + pei.location + "\t\t" + pei.getStatusString());
-
-                }*/
             } else if (!i.isButton()) {
                 EntryItem ei = (EntryItem) i;
                 v = vi.inflate(R.layout.list_item_entry, null);
@@ -95,17 +89,7 @@ public class EntryAdapter extends ArrayAdapter<Item> {
                     title.setText(ei.title);
                 if (subtitle != null)
                     subtitle.setText(ei.subtitle);
-            } /*else {
-                ButtonItem bi = (ButtonItem) i;
-
-                v = vi.inflate(R.layout.print_options, null);
-                TextView printButton = (TextView) v
-                        .findViewById(R.id.print_button);
-
-                if (printButton != null) {
-                    printButton.setText(bi.title);
-                }
-            }*/
+            } 
         }
         return v;
     }
