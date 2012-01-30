@@ -1,19 +1,30 @@
 package edu.mit.printAtMIT.view;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import edu.mit.printAtMIT.PrintAtMITActivity;
 import edu.mit.printAtMIT.R;
+import edu.mit.printAtMIT.list.EntryAdapter;
+import edu.mit.printAtMIT.list.EntryItem;
+import edu.mit.printAtMIT.list.Item;
+import edu.mit.printAtMIT.list.PrinterEntryItem;
+import edu.mit.printAtMIT.list.SectionItem;
 import edu.mit.printAtMIT.main.MainMenuActivity;
 import edu.mit.printAtMIT.main.SettingsActivity;
 import edu.mit.printAtMIT.view.PrinterListActivity.RefreshListTask;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -24,6 +35,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +44,7 @@ import android.widget.Toast;
  * 
  * Menu: Refresh View on Map Home Settings About
  */
-public class PrinterInfoActivity extends Activity {
+public class PrinterInfoActivity extends ListActivity {
     public static final String TAG = "PrinterInfoActivity";
     public static final String REFRESH_ERROR = "Error getting data, please be sure you are connected to the MIT network";
 
@@ -59,9 +71,19 @@ public class PrinterInfoActivity extends Activity {
         mDbAdapter.open();
         favorite = mDbAdapter.isFavorite(id);
 
-        Button button01 = (Button) findViewById(R.id.button01);
-        button02 = (Button) findViewById(R.id.button02);
-
+        Button button01 = (Button) findViewById(R.id.map_button);
+        button02 = (Button) findViewById(R.id.favorite_button);
+        
+        if (favorite) {
+            button02.setText("Remove from favorites");
+            Drawable img = this.getResources().getDrawable( R.drawable.btn_rating_star_off_pressed );
+            button02.setCompoundDrawablesWithIntrinsicBounds(null, img, null, null);
+        } else {
+            button02.setText("Add to favorites");
+            Drawable img = this.getResources().getDrawable( R.drawable.btn_rating_star_off_normal );
+            button02.setCompoundDrawablesWithIntrinsicBounds(null, img, null, null);
+        }
+        
         button01.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
@@ -79,10 +101,14 @@ public class PrinterInfoActivity extends Activity {
                 if (favorite) {
                     mDbAdapter.removeFavorite(id);
                     button02.setText("Add to Favorites");
+                    Drawable img = v.getContext().getResources().getDrawable( R.drawable.btn_rating_star_off_normal );
+                    button02.setCompoundDrawablesWithIntrinsicBounds(null, img, null, null);
                     favorite = false;
                 } else {
                     mDbAdapter.addToFavorites(id);
                     button02.setText("Remove from Favorites");
+                    Drawable img = v.getContext().getResources().getDrawable( R.drawable.btn_rating_star_off_pressed );
+                    button02.setCompoundDrawablesWithIntrinsicBounds(null, img, null, null);
                     favorite = true;
                 }
             }
@@ -92,24 +118,8 @@ public class PrinterInfoActivity extends Activity {
         RefreshTask task = new RefreshTask();
         task.execute();
 
-        mDbAdapter.close();
+       // mDbAdapter.close();
     }
-
-    /*private void setViews() {
-        String result = "";
-        try {
-            result = refresh();
-        } catch (ParseException e) {
-            // e.printStackTrace();
-            Log.e(TAG, "RefreshTask Parse NUBFAIL");
-            result = PrinterInfoActivity.REFRESH_ERROR;
-            Toast.makeText(getApplicationContext(),
-                    "Error getting data, please try again later",
-                    Toast.LENGTH_SHORT).show();
-        }
-        TextView tv = (TextView) findViewById(R.id.printer_info_text);
-        tv.setText(result);
-    }*/
 
     @Override
     protected void onPause() {
@@ -124,11 +134,15 @@ public class PrinterInfoActivity extends Activity {
         Log.i("PrinterInfoActivity", "onResume");
         if (favorite) {
             button02.setText("Remove from favorites");
+            Drawable img = this.getResources().getDrawable( R.drawable.btn_rating_star_off_pressed );
+            button02.setCompoundDrawablesWithIntrinsicBounds(null, img, null, null);
         } else {
             button02.setText("Add to favorites");
+            Drawable img = this.getResources().getDrawable( R.drawable.btn_rating_star_off_normal );
+            button02.setCompoundDrawablesWithIntrinsicBounds(null, img, null, null);
         }
 
-        mDbAdapter.open();
+        //mDbAdapter.open();
     }
 
     @Override
@@ -177,14 +191,15 @@ public class PrinterInfoActivity extends Activity {
      * 
      * @throws ParseException
      */
-    private String refresh() throws ParseException {
+    private /*String*/ ParseObject refresh() throws ParseException {
 
         // Parse makes call to cloud to retrieve printer information
         Log.i(TAG, "refresh()");
         ParseQuery query = new ParseQuery("PrintersData");
         ParseObject printer;
         printer = query.get(id);
-        return this.constructInfo(printer);
+       // return this.displayInfo(printer);
+        return printer;
     }
 
     private String getStatus(int code) {
@@ -202,6 +217,46 @@ public class PrinterInfoActivity extends Activity {
         return null;
     }
 
+    private void displayInfo(ParseObject printer) {
+    	final List<Item> items = new ArrayList<Item>();
+    	
+    	if (printer != null) {
+	    	PrinterEntryItem p = new PrinterEntryItem(printer.getObjectId(),
+	                printer.getString("printerName"), printer.getString("location"),
+	                Integer.parseInt(printer.getString("status")));
+	    	items.add(p);
+	    	
+	        items.add(new SectionItem("Printer Details"));
+	//        items.add(new EntryItem("Ink Color", userSettings.getString(PrintAtMITActivity.INKCOLOR, PrintAtMITActivity.BLACKWHITE), ITEM_INKCOLOR));
+	//        items.add(new EntryItem("Copies", ""+userSettings.getInt(PrintAtMITActivity.COPIES, 1), ITEM_COPIES));
+	        //items.add(new ButtonItem("Print Test Page", ITEM_PRINT_BUTTON));
+	
+	        if (printer.getString("PaperJamStatus") != null) {
+	        	items.add(new EntryItem("Paper Jam", printer.getString("PaperJamStatus"), 2));
+	        }
+	        else {
+	        	items.add(new EntryItem("Paper Jam", "Unavailable", 2));
+	        }
+	        if (printer.getString("PaperStatus") != null) {
+	        	items.add(new EntryItem("Paper Status", printer.getString("PaperStatus"), 3));
+	        }
+	        else {
+	        	items.add(new EntryItem("Paper Status", "Unavailable", 3));
+	        }
+	        if (printer.getString("TonerStatus") != null) {
+	        	items.add(new EntryItem("Toner Status", printer.getString("TonerStatus"), 4));
+	        }
+	        else {
+	        	items.add(new EntryItem("Toner Status", "Unavailable", 4));
+	        }
+	        EntryAdapter adapter = new EntryAdapter(this, (ArrayList<Item>)items);
+	        
+	        setListAdapter(adapter);
+	        
+	        ListView lv = getListView();
+	        lv.setTextFilterEnabled(true);
+    	}
+    }
     private String constructInfo(ParseObject printer) {
         StringBuilder name = new StringBuilder("Printer Name: ");
         /*StringBuilder info = new StringBuilder("Front Panel Message: " + "\n");*/
@@ -243,7 +298,7 @@ public class PrinterInfoActivity extends Activity {
         return result;
     }
 
-    public class RefreshTask extends AsyncTask<Void, byte[], String> {
+    public class RefreshTask extends AsyncTask<Void, byte[], ParseObject> {
         private ProgressDialog dialog;
 
         @Override
@@ -254,21 +309,26 @@ public class PrinterInfoActivity extends Activity {
         }
 
         @Override
-        protected String doInBackground(Void... params) { // This runs on a
+        protected /*String*/ ParseObject doInBackground(Void... params) { // This runs on a
                                                           // different thread
-            String result = "";
+           // String result = "";
+        	ParseObject printer = null;
             if (isConnected()) {
                 try {
-                    result = refresh();
+                	 ParseQuery query = new ParseQuery("PrintersData");
+                     
+                     printer = query.get(id);
+                    //result = refresh();
                 } catch (ParseException e) {
                     // e.printStackTrace();
                     Log.e(TAG, "RefreshTask Parse NUBFAIL");
-                    result = PrinterInfoActivity.REFRESH_ERROR;
+                    //result = PrinterInfoActivity.REFRESH_ERROR;
                 }
             } else {
-                result = PrinterInfoActivity.REFRESH_ERROR;
+                //result = PrinterInfoActivity.REFRESH_ERROR;
             }
-            return result;
+            //return result;
+            return printer;
         }
 
         @Override
@@ -277,17 +337,18 @@ public class PrinterInfoActivity extends Activity {
         }
 
         @Override
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(ParseObject printer) {
 
-            if (result.equals(PrinterInfoActivity.REFRESH_ERROR)) {
+            if (/*result.equals(PrinterInfoActivity.REFRESH_ERROR)*/ printer == null) {
                 Toast.makeText(getApplicationContext(),
                         "Error getting data, please try again later",
                         Toast.LENGTH_SHORT).show();
                 Log.i(TAG,
                         "RefreshTask onPostExecute: Completed with an Error.");
             }
-            TextView tv = (TextView) findViewById(R.id.printer_info_text);
-            tv.setText(result);
+            displayInfo(printer);
+            //TextView tv = (TextView) findViewById(R.id.printer_info_text);
+            //tv.setText(result);
             dialog.dismiss();
 
         }
