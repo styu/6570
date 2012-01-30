@@ -21,6 +21,13 @@ import edu.mit.printAtMIT.main.SettingsActivity;
  * Menu buttons: Settings About
  */
 public class PrintListMenuActivity extends Activity {
+	
+	public static final String LIST_TYPE = "listtype";
+	public static final String LIST_ALL = "All";
+	public static final String LIST_DORM = "Dorm";
+	public static final String LIST_CAMPUS = "Campus";
+	public static final String LIST_FAVORITE = "Favorite";
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -37,7 +44,7 @@ public class PrintListMenuActivity extends Activity {
 			public void onClick(View view) {
 				Intent intent = new Intent(view.getContext(),
 						PrinterListActivity.class);
-				intent.putExtra("listtype", "dorm");
+				intent.putExtra(PrintListMenuActivity.LIST_TYPE, PrintListMenuActivity.LIST_DORM);
 				startActivity(intent);
 			}
 		});
@@ -47,7 +54,7 @@ public class PrintListMenuActivity extends Activity {
 			public void onClick(View view) {
 				Intent intent = new Intent(view.getContext(),
 						PrinterListActivity.class);
-				intent.putExtra("listtype", "campus");
+				intent.putExtra(PrintListMenuActivity.LIST_TYPE, PrintListMenuActivity.LIST_CAMPUS);
 				startActivity(intent);
 			}
 		});
@@ -57,7 +64,7 @@ public class PrintListMenuActivity extends Activity {
 			public void onClick(View view) {
 				Intent intent = new Intent(view.getContext(),
 						PrinterListActivity.class);
-				intent.putExtra("listtype", "favorite");
+				intent.putExtra(PrintListMenuActivity.LIST_TYPE, PrintListMenuActivity.LIST_FAVORITE);
 				startActivity(intent);
 			}
 		});
@@ -67,7 +74,7 @@ public class PrintListMenuActivity extends Activity {
 			public void onClick(View view) {
 				Intent intent = new Intent(view.getContext(),
 						PrinterListActivity.class);
-				intent.putExtra("listtype", "all");
+				intent.putExtra(PrintListMenuActivity.LIST_TYPE, PrintListMenuActivity.LIST_ALL);
 				startActivity(intent);
 			}
 		});

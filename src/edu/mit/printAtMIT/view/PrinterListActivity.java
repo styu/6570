@@ -11,6 +11,7 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -50,6 +51,7 @@ public class PrinterListActivity extends ListActivity {
     public static final String TAG = "PrinterListActivity";
     private static final String REFRESH_ERROR = "Error connecting to network, please try again later";
     private static final int REFRESH_ID = Menu.FIRST;
+    
     private Map<String, PrinterEntryItem> map = new HashMap<String, PrinterEntryItem>();
     private PrintersDbAdapter mDbAdapter;
     private PrinterComparator comparator = new PrinterComparator();
@@ -71,6 +73,16 @@ public class PrinterListActivity extends ListActivity {
         Parse.initialize(this, "KIb9mNtPKDtkDk7FJ9W6b7MiAr925a10vNuCPRer",
                 "dSFuQYQXSvslh9UdznzzS9Vb0kDgcKnfzgglLUHT");
         setContentView(R.layout.printer_list);
+        
+        SharedPreferences listType = getPreferences(MODE_PRIVATE);
+        Bundle extras = getIntent().getExtras(); 
+
+        if (extras != null) {
+        	SharedPreferences.Editor editor = listType.edit();
+        	editor.putString(PrintListMenuActivity.LIST_TYPE, getIntent().getStringExtra(PrintListMenuActivity.LIST_TYPE));
+        	editor.commit();
+        }
+        /*
         Button button01 = (Button) findViewById(R.id.button01);
         mDbAdapter = new PrintersDbAdapter(this);
 
@@ -82,7 +94,7 @@ public class PrinterListActivity extends ListActivity {
                 intent.putExtra("allPrinterView", true);
                 startActivity(intent);
             }
-        });
+        });*/
         if (isConnected(self)) {
             ParseQuery query = new ParseQuery("PrintersData");
             List<ParseObject> objects = null;
@@ -159,13 +171,43 @@ public class PrinterListActivity extends ListActivity {
      * Sets Views Should be called in UI thread
      */
     private void setListViewData(List<ParseObject> objects) {
+    	SharedPreferences listSettings = getPreferences(MODE_PRIVATE);
+    	String listType = listSettings.getString(PrintListMenuActivity.LIST_TYPE, PrintListMenuActivity.LIST_ALL);
         TextView tv = (TextView) findViewById(R.id.printer_list_error);
         tv.setText("");
         // resets map if not null
         if (objects != null) {
             map = new HashMap<String, PrinterEntryItem>();
             for (ParseObject o : objects) {
-                if (o.getBoolean("residence")) {
+            	if (listType.equals(PrintListMenuActivity.LIST_ALL)) {
+            		PrinterEntryItem item = new PrinterEntryItem(o.getObjectId(),
+                            o.getString("printerName"), o.getString("location"),
+                            Integer.parseInt(o.getString("status")));
+                    map.put(o.getObjectId(), item);
+            	}
+            	else if (listType.equals(PrintListMenuActivity.LIST_DORM)) {
+            		if (o.getBoolean("residence")) {
+            			PrinterEntryItem item = new PrinterEntryItem(o.getObjectId(),
+                                o.getString("printerName"), o.getString("location"),
+                                Integer.parseInt(o.getString("status")));
+                        map.put(o.getObjectId(), item);
+            		}
+            	}
+            	else if (listType.equals(PrintListMenuActivity.LIST_CAMPUS)) {
+            		if (!o.getBoolean("residence")) {
+            			PrinterEntryItem item = new PrinterEntryItem(o.getObjectId(),
+                                o.getString("printerName"), o.getString("location"),
+                                Integer.parseInt(o.getString("status")));
+                        map.put(o.getObjectId(), item);
+            		}
+            	}
+            	else {
+            		PrinterEntryItem item = new PrinterEntryItem(o.getObjectId(),
+                            o.getString("printerName"), o.getString("location"),
+                            Integer.parseInt(o.getString("status")));
+                    map.put(o.getObjectId(), item);
+            	}
+                /*if (o.getBoolean("residence")) {
                     Log.i(TAG, o.getString("printerName") + " residence");
                 } else {
                     Log.i(TAG, o.getString("printerName") + " NOT RESIDENCE");
@@ -173,7 +215,7 @@ public class PrinterListActivity extends ListActivity {
                 PrinterEntryItem item = new PrinterEntryItem(o.getObjectId(),
                         o.getString("printerName"), o.getString("location"),
                         Integer.parseInt(o.getString("status")));
-                map.put(o.getObjectId(), item);
+                map.put(o.getObjectId(), item);*/
             }
         } else {
 //            // changes all status to unknown
@@ -189,10 +231,10 @@ public class PrinterListActivity extends ListActivity {
         }
 
         final List<Item> items = new ArrayList<Item>();
-        items.add(new SectionItem("Favorites"));
-        mDbAdapter.open();
+       //items.add(new SectionItem("Favorites"));
+       // mDbAdapter.open();
 
-        List<String> ids = mDbAdapter.getFavorites();
+        /*List<String> ids = mDbAdapter.getFavorites();
         List<PrinterEntryItem> favorites = new ArrayList<PrinterEntryItem>();
         for (String id : ids) {
             if (map.containsKey(id)) {
@@ -202,8 +244,8 @@ public class PrinterListActivity extends ListActivity {
         Collections.sort(favorites, comparator);
         for (PrinterEntryItem item : favorites) {
             items.add(item);
-        }
-        items.add(new SectionItem("All Printers"));
+        }*/
+        items.add(new SectionItem(listType+" Printers"));
 
         List<PrinterEntryItem> printers = new ArrayList<PrinterEntryItem>(
                 map.values());
@@ -216,7 +258,7 @@ public class PrinterListActivity extends ListActivity {
         Log.i(TAG, new Integer(items.size()).toString());
         EntryAdapter adapter = new EntryAdapter(this, (ArrayList<Item>) items);
         setListAdapter(adapter);
-        mDbAdapter.close();
+        //mDbAdapter.close();
 
         ListView lv = getListView();
         lv.setTextFilterEnabled(true);
