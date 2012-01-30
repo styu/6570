@@ -3,17 +3,25 @@ package edu.mit.printAtMIT.print;
 import java.io.File;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import edu.mit.printAtMIT.R;
 import edu.mit.printAtMIT.main.MainMenuActivity;
 import edu.mit.printAtMIT.main.SettingsActivity;
@@ -26,9 +34,11 @@ import edu.mit.printAtMIT.main.SettingsActivity;
  */
 public class PrintMenuActivity extends Activity {
 	private static final int PICK_IMAGE = 1;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+	    
 		setContentView(R.layout.print_menu);
 
 		Button downloadsButton = (Button) findViewById(R.id.downloads_image);
@@ -104,11 +114,15 @@ public class PrintMenuActivity extends Activity {
 			startActivity(intent);
 			return true;
 		case R.id.about:
-			Dialog dialog = new Dialog(this);
-
-			dialog.setContentView(R.layout.about_dialog);
-			dialog.setTitle("About");
-			dialog.show();
+	    	Dialog dialog = new Dialog(this);
+	    	dialog.setContentView(R.layout.about_dialog);
+	    	dialog.setTitle("About");
+	    	dialog.show();
+	    		
+	    	TextView tv = (TextView) dialog.findViewById(R.id.about_text);
+	    	Linkify.addLinks(tv, Linkify.ALL);
+	    	tv.setMovementMethod(LinkMovementMethod.getInstance());
+	    	
 			super.onOptionsItemSelected(item);
 			return true;
 		default:

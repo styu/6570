@@ -33,6 +33,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.InputType;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -108,7 +110,7 @@ public class PrintOptionsActivity extends ListActivity {
 
         btnStart.setOnClickListener(new View.OnClickListener() {
  			
- 			@Override
+ 			
  			public void onClick(View v) {
  				ConvertAndPrintTask printTask = new ConvertAndPrintTask();
                  printTask.execute();
@@ -226,11 +228,14 @@ public class PrintOptionsActivity extends ListActivity {
 			startActivity(intent);
 			return true;
 		case R.id.about:
-			Dialog dialog = new Dialog(this);
-
-			dialog.setContentView(R.layout.about_dialog);
-			dialog.setTitle("About");
-			dialog.show();
+	    	Dialog dialog = new Dialog(this);
+	    	dialog.setContentView(R.layout.about_dialog);
+	    	dialog.setTitle("About");
+	    	dialog.show();
+	    		
+	    	TextView tv = (TextView) dialog.findViewById(R.id.about_text);
+	    	Linkify.addLinks(tv, Linkify.ALL);
+	    	tv.setMovementMethod(LinkMovementMethod.getInstance());
 			super.onOptionsItemSelected(item);
 			return true;
 		default:

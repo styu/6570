@@ -18,6 +18,8 @@ import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -30,6 +32,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import edu.mit.printAtMIT.PrintAtMITActivity;
 import edu.mit.printAtMIT.R;
@@ -137,11 +140,14 @@ public class SettingsActivity extends ListActivity {
         	startActivity(intent);
             return true;
         case R.id.about:
-        	Dialog dialog = new Dialog(this);
-
-			dialog.setContentView(R.layout.about_dialog);
-			dialog.setTitle("About");
-			dialog.show();
+	    	Dialog dialog = new Dialog(this);
+	    	dialog.setContentView(R.layout.about_dialog);
+	    	dialog.setTitle("About");
+	    	dialog.show();
+	    		
+	    	TextView tv = (TextView) dialog.findViewById(R.id.about_text);
+	    	Linkify.addLinks(tv, Linkify.ALL);
+	    	tv.setMovementMethod(LinkMovementMethod.getInstance());
             super.onOptionsItemSelected(item);
             return true;
         default:
