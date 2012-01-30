@@ -58,6 +58,7 @@
         </activity>
         
         <activity android:name=".view.PrinterInfoActivity"></activity>
+        <activity android:name=".view.PrintListMenuActivity"></activity>
         <activity android:name=".view.PrinterListActivity"></activity>
     </application>
 
