@@ -204,18 +204,18 @@ public class PrinterInfoActivity extends Activity {
 
     private String constructInfo(ParseObject printer) {
         StringBuilder name = new StringBuilder("Printer Name: ");
-        StringBuilder info = new StringBuilder("Front Panel Message: " + "\n");
+        /*StringBuilder info = new StringBuilder("Front Panel Message: " + "\n");*/
         StringBuilder status = new StringBuilder("Status: ");
         StringBuilder paperJam = new StringBuilder("Paper Jam: ");
         StringBuilder paperStatus = new StringBuilder("Paper Status: ");
         StringBuilder tonerStatus = new StringBuilder("Toner Status: ");
         name.append(printer.getString("printerName"));
-        info.append(printer.getString("FrontPanelMessage") + "\n");
+        /*info.append(printer.getString("FrontPanelMessage") + "\n");*/
         if (printer.getString("status") != null) {
             status.append(this.getStatus(Integer.parseInt(printer
                     .getString("status"))));
         }
-        if (printer.getString("line2") != null) {
+        /*if (printer.getString("line2") != null) {
             info.append(printer.getString("line2") + "\n");
         }
         if (printer.getString("line3") != null) {
@@ -226,7 +226,7 @@ public class PrinterInfoActivity extends Activity {
         }
         if (printer.getString("line5") != null) {
             info.append(printer.getString("line5"));
-        }
+        }*/
         if (printer.getString("PaperJamStatus") != null) {
             paperJam.append(printer.getString("PaperJamStatus"));
         }
@@ -237,7 +237,7 @@ public class PrinterInfoActivity extends Activity {
             tonerStatus.append(printer.getString("TonerStatus"));
         }
 
-        String result = name.toString() + "\n\n" + info.toString() + "\n\n"
+        String result = name.toString() + "\n\n"
                 + status.toString() + "\n\n" + paperJam.toString() + "\n\n"
                 + paperStatus.toString() + "\n\n" + tonerStatus.toString();
         return result;
