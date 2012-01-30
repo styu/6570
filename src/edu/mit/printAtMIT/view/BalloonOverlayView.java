@@ -30,11 +30,11 @@ public class BalloonOverlayView extends FrameLayout {
 
         View v = inflater.inflate(R.layout.map_balloon, layout);
         LinearLayout inner = (LinearLayout) v.findViewById(R.id.balloon_inner_layout);
-        inner.setPadding(5, 0, 5, 5);
+        inner.setPadding(15, 0, 5, 5);
         title = (TextView) v.findViewById(R.id.balloon_item_title);
-        title.setPadding(10, 5, 10, 0);
+        title.setPadding(0, 5, 10, 0);
         snippet = (TextView) v.findViewById(R.id.balloon_item_snippet);
-        snippet.setPadding(10, 0, 10, 5);
+        snippet.setPadding(0, 0, 10, 5);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, MapView.LayoutParams.BOTTOM_CENTER);
         
