@@ -75,6 +75,11 @@ public class PrintOptionsActivity extends ListActivity {
     private String userName;
     private int numCopies;
     
+    private static final String FILE = "FILE";
+    private static final String IMAGE = "IMAGE";
+    private static final String WEB = "WEB";
+    private String type = FILE;
+
     //public static Button btnStart;
     
     private static final String hostName = "mitprint.mit.edu";
@@ -94,17 +99,7 @@ public class PrintOptionsActivity extends ListActivity {
 		fileLoc =  cursor.getString(column_index);
 		return fileLoc;
 	}
-	
-	private String convertImage(String fileLoc){
-   		ImageConverterTask imageConverter = new ImageConverterTask();
-   		imageConverter.execute(new String[] { fileLoc });
-        //String extStorageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
-        //File f = new File(extStorageDirectory, "printAtMIT.pdf");
-        String intStorageDirectory = getFilesDir().toString();
-        File f = new File(intStorageDirectory, "printAtMIT.pdf");
-		return f.getPath();
-	}
-	
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,9 +113,9 @@ public class PrintOptionsActivity extends ListActivity {
         	// opening an image
         	if (scheme.equals("content")){
         		fileLoc = getImageFile(data);
-        		File imgFile = new File(fileLoc);
-        		fileName = imgFile.getName();
-        		fileLoc = convertImage(fileLoc);
+        		File f = new File(fileLoc);
+        		fileName = f.getName();
+        		type = IMAGE;
         	}
         	// opening a file
         	if (scheme.equals("file")){
@@ -139,8 +134,9 @@ public class PrintOptionsActivity extends ListActivity {
         	Uri imageUri = (Uri) extras.getParcelable(Intent.EXTRA_STREAM);
         	if (imageUri != null){
         		fileLoc = getImageFile(imageUri);
-        		File imgFile = new File(fileLoc);
-        		fileName = imgFile.getName();
+        		File f = new File(fileLoc);
+        		fileName = f.getName();
+        		type = IMAGE;
         	}
         	
         	// if not a shared web page
@@ -148,22 +144,16 @@ public class PrintOptionsActivity extends ListActivity {
            		// gotten from print activity - pdf, ps, or txt. 
        			fileName = (fileName == null) ? extras.getString("fileName"): fileName;
        			fileLoc = (fileLoc == null) ? extras.getString("fileLoc") : fileLoc;
-           		
+
            		// gotten from print activity or send intent - image files, need to be converted
        			if (!(fileName.endsWith(".pdf") || fileName.endsWith(".ps") || fileName.endsWith(".txt"))){
-               		fileLoc = convertImage(fileLoc);
+       				type = IMAGE;
            		}
            	}
            	else{
-            	// when called from sharing web page (send intent)
-           		UrlConverterTask urlConverter = new UrlConverterTask();
-           		urlConverter.execute(new String[] { url });
-                //String extStorageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
-                //File f = new File(extStorageDirectory, "printAtMIT.pdf");
-                String intStorageDirectory = getFilesDir().toString();
-                File f = new File(intStorageDirectory, "printAtMIT.pdf");
+           		fileLoc = url;
            		fileName = url;
-           		fileLoc = f.getPath();
+           		type = WEB;
            	}
         }
         
@@ -174,8 +164,6 @@ public class PrintOptionsActivity extends ListActivity {
         	queue = "color";
         else
         	queue = "bw";
-       // Toast.makeText(getApplicationContext(), fileLoc + userName + hostName + queue, Toast.LENGTH_SHORT).show();
-
         
         /*TextView text = (TextView) findViewById(R.id.list_item_entry_title);
         text.setText(fileName);
@@ -202,12 +190,6 @@ public class PrintOptionsActivity extends ListActivity {
         //btnStart.setOnClickListener(btnStartListener);
         
         //textStatus = (TextView)findViewById(R.id.textStatus);
-        
-        //String intStorageDirectory = getFilesDir().toString();
-        //File f = new File(intStorageDirectory, "printAtMIT.pdf");
-        //Toast.makeText(getApplicationContext(), f.getPath(), Toast.LENGTH_SHORT).show();
-        
-
     }
     
     @Override
@@ -246,143 +228,6 @@ public class PrintOptionsActivity extends ListActivity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-    public class ImageConverterTask extends AsyncTask<String, Void, Boolean> {
-    	private ProgressDialog dialog;
-    	
-        @Override
-        protected void onPreExecute() {
-            dialog = ProgressDialog.show(PrintOptionsActivity.this, "", 
-                    "Converting image to PDF...", true);
-        }
-        
-        @Override
-        protected Boolean doInBackground(String... params) { //This runs on a different thread
-        	boolean result = false;
-        	String imgLoc = params[0];
-        	try {
-        		Log.d("PDF", "starting converting");
-                HttpClient client = new DefaultHttpClient();  
-                String  postURL = "http://sedris.mit.edu/print.php?filename=" + fileName;
-                HttpPost post = new HttpPost(postURL); 
-                
-                File sendFile = new File(imgLoc);
-                //FileOutputStream fs = new FileOutputStream(fileLoc);
-                FileEntity reqEntity = new FileEntity(sendFile, "binary/octet-stream");
-                post.setEntity(reqEntity);
-                //reqEntity.setContentType("binary/octet-stream");
-      
-                HttpResponse responsePOST = client.execute(post);
-                HttpEntity resEntity = responsePOST.getEntity();  
-                InputStream inputStream = resEntity.getContent();
-                //String extStorageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
-                //File f = new File(extStorageDirectory, "printAtMIT.pdf");
-                String intStorageDirectory = getFilesDir().toString();
-                File f = new File(intStorageDirectory, "printAtMIT.pdf");
-                
-            	OutputStream out = new FileOutputStream(f);
-
-            	int read = 0;
-            	byte[] bytes = new byte[1024];
-             
-            	while ((read = inputStream.read(bytes)) != -1) {
-            		out.write(bytes, 0, read);
-            	}
-             
-            	inputStream.close();
-            	out.flush();
-            	out.close();
-            	
-                
-            } catch (Exception  e) {
-            	Log.e("PDF", e.toString());
-                e.printStackTrace();
-                result = true;
-            }
-        	return result;
-        }
-
-        protected void onPostExecute(Boolean result) {
-        	dialog.dismiss();
-        	
-            if (result) {
-            	finish();
-                Toast.makeText(getApplicationContext(), "Error converting, try again", Toast.LENGTH_SHORT).show();
-                Log.i("ImageConverterTask", "onPostExecute: Completed with an Error.");
-            } else {
-                Toast.makeText(getApplicationContext(), "Successfully converted", Toast.LENGTH_SHORT).show();
-                Log.i("ImageConverterTask", "onPostExecute: Completed.");
-            }
-        }
-        
-    }	
-    
-    public class UrlConverterTask extends AsyncTask<String, Void, Boolean> {
-    	private ProgressDialog dialog;
-    	
-        @Override
-        protected void onPreExecute() {
-            dialog = ProgressDialog.show(PrintOptionsActivity.this, "", 
-                    "Converting to PDF with PDFmyURL.com...", true);
-        }
-        
-        @Override
-        protected Boolean doInBackground(String... params) { //This runs on a different thread
-            String url = params[0];
-            boolean result = false;
-            
-        	try {
-                HttpClient client = new DefaultHttpClient();  
-                String  postURL = "http://pdfmyurl.com";
-                HttpPost post = new HttpPost(postURL); 
-                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-                pairs.add(new BasicNameValuePair("url", url));
-                pairs.add(new BasicNameValuePair("-O", "Portrait"));
-                UrlEncodedFormEntity ent = new UrlEncodedFormEntity(pairs,HTTP.UTF_8);
-                post.setEntity(ent);
-                HttpResponse responsePOST = client.execute(post);  
-                HttpEntity resEntity = responsePOST.getEntity();  
-                
-                InputStream inputStream = resEntity.getContent();
-                //String extStorageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
-                //File f = new File(extStorageDirectory, "printAtMIT.pdf");
-                String intStorageDirectory = getFilesDir().toString();
-                File f = new File(intStorageDirectory, "printAtMIT.pdf");
-
-            	OutputStream out = new FileOutputStream(f);
-
-            	int read = 0;
-            	byte[] bytes = new byte[1024];
-             
-            	while ((read = inputStream.read(bytes)) != -1) {
-            		out.write(bytes, 0, read);
-            	}
-             
-            	inputStream.close();
-            	out.flush();
-            	out.close();
-            	
-                
-            } catch (Exception  e) {
-                e.printStackTrace();
-                result = true;
-            }
-        	return result;
-        }
-
-        protected void onPostExecute(Boolean result) {
-        	dialog.dismiss();
-        	
-            if (result) {
-            	finish();
-                Toast.makeText(getApplicationContext(), "Error converting, try again", Toast.LENGTH_SHORT).show();
-                Log.i("UrlConverterTask", "onPostExecute: Completed with an Error.");
-            } else {
-                Toast.makeText(getApplicationContext(), "Successfully converted", Toast.LENGTH_SHORT).show();
-                Log.i("UrlConverterTask", "onPostExecute: Completed.");
-            }
-        }
-        
-    }
         
     @Override
     public void onConfigurationChanged(Configuration newConfig){
@@ -528,7 +373,7 @@ public class PrintOptionsActivity extends ListActivity {
 	        	break;
 
     		case ITEM_PRINT_BUTTON:
-    			PrintTask printTask = new PrintTask();
+    			ConvertAndPrintTask printTask = new ConvertAndPrintTask();
                 printTask.execute();
                 break;
     		default: Toast.makeText(this, "herp derp", Toast.LENGTH_SHORT).show(); break;
@@ -539,16 +384,9 @@ public class PrintOptionsActivity extends ListActivity {
     	super.onListItemClick(l, v, position, id);
     }
     
-/*    private OnClickListener btnStartListener = new View.OnClickListener() {
-        public void onClick(View v){
-            //btnStart.setVisibility(View.INVISIBLE);
-            printTask = new PrintTask();
-            printTask.execute();
-        }
-    };*/
-    
-    public class PrintTask extends AsyncTask<Void, Void, Boolean> {
+    public class ConvertAndPrintTask extends AsyncTask<Void, Void, Boolean> {
     	private ProgressDialog dialog;
+    	private boolean error = false;
 
         @Override
         protected void onPreExecute() {
@@ -556,10 +394,100 @@ public class PrintOptionsActivity extends ListActivity {
             dialog = ProgressDialog.show(PrintOptionsActivity.this, "", 
                     "Sending print job...", true);
         }
+        
+    	private String convertImage(String imgLoc){
+        	try {
+        		Log.d("PDF", "starting converting");
+                HttpClient client = new DefaultHttpClient();  
+                String  postURL = "http://sedris.mit.edu/print.php?filename=" + fileName;
+                HttpPost post = new HttpPost(postURL); 
+                
+                File sendFile = new File(imgLoc);
+                FileEntity reqEntity = new FileEntity(sendFile, "binary/octet-stream");
+                post.setEntity(reqEntity);
+      
+                HttpResponse responsePOST = client.execute(post);
+                HttpEntity resEntity = responsePOST.getEntity();  
+                InputStream inputStream = resEntity.getContent();
+                String intStorageDirectory = getFilesDir().toString();
+                File f = new File(intStorageDirectory, "printAtMIT.pdf");
+                
+            	OutputStream out = new FileOutputStream(f);
 
+            	int read = 0;
+            	byte[] bytes = new byte[1024];
+             
+            	while ((read = inputStream.read(bytes)) != -1) {
+            		out.write(bytes, 0, read);
+            	}
+             
+            	inputStream.close();
+            	out.flush();
+            	out.close();
+            } catch (Exception  e) {
+            	Log.i("ConvertAndPrintTask", "Error converting image");
+                e.printStackTrace();
+                error = true;
+            }
+
+            String intStorageDirectory = getFilesDir().toString();
+            File f = new File(intStorageDirectory, "printAtMIT.pdf");
+    		return f.getPath();
+    	}
+    	
+    	private String convertUrl (String url){
+        	try {
+                HttpClient client = new DefaultHttpClient();  
+                String  postURL = "http://pdfmyurl.com";
+                HttpPost post = new HttpPost(postURL); 
+                List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+                pairs.add(new BasicNameValuePair("url", url));
+                pairs.add(new BasicNameValuePair("-O", "Portrait"));
+                UrlEncodedFormEntity ent = new UrlEncodedFormEntity(pairs,HTTP.UTF_8);
+                post.setEntity(ent);
+                HttpResponse responsePOST = client.execute(post);  
+                HttpEntity resEntity = responsePOST.getEntity();  
+                
+                InputStream inputStream = resEntity.getContent();
+                String intStorageDirectory = getFilesDir().toString();
+                File f = new File(intStorageDirectory, "printAtMIT.pdf");
+
+            	OutputStream out = new FileOutputStream(f);
+
+            	int read = 0;
+            	byte[] bytes = new byte[1024];
+             
+            	while ((read = inputStream.read(bytes)) != -1) {
+            		out.write(bytes, 0, read);
+            	}
+             
+            	inputStream.close();
+            	out.flush();
+            	out.close();
+            	
+                
+            } catch (Exception  e) {
+            	Log.i("ConvertAndPrintTask", "Error converting url");
+                e.printStackTrace();
+                error = true;
+            }
+        	
+            String intStorageDirectory = getFilesDir().toString();
+            File f = new File(intStorageDirectory, "printAtMIT.pdf");
+    		return f.getPath();
+    	}
         @Override
         protected Boolean doInBackground(Void... params) { //This runs on a different thread
-            boolean result = false;
+			if (type == IMAGE){
+        		File imgFile = new File(fileLoc);
+        		fileName = imgFile.getName();
+        		fileLoc = convertImage(fileLoc);
+			}
+			if (type == WEB){
+				fileName = fileLoc;
+           		fileLoc = convertUrl(fileLoc);
+			}
+            
             Lpr lpr = new Lpr();
             try {
             	File f = new File(fileLoc);
@@ -567,21 +495,20 @@ public class PrintOptionsActivity extends ListActivity {
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();      
-                Log.i("AsyncTask", "doInBackground: IOException");
-                result = true;
+                Log.i("ConvertAndPrintTask", "doInBackground: IOException");
+                error = true;
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
-                Log.i("AsyncTask", "doInBackground: Exception");
-                result = true;
+                Log.i("ConvertAndPrintTask", "doInBackground: Exception");
+                error = true;
             }
-            return result;
+            return error;
         }
         
         @Override
         protected void onCancelled() {
-            Log.i("AsyncTask", "Cancelled.");
-            //btnStart.setVisibility(View.VISIBLE);
+            Log.i("ConvertAndPrintTask", "Cancelled.");
         }
         @Override
         protected void onPostExecute(Boolean result) {
@@ -593,13 +520,12 @@ public class PrintOptionsActivity extends ListActivity {
             if (result) {
             	finish();
                 Toast.makeText(getApplicationContext(), "Error sending, try again", Toast.LENGTH_SHORT).show();
-                Log.i("AsyncTask", "onPostExecute: Completed with an Error.");
+                Log.i("ConvertAndPrintTask", "onPostExecute: Completed with an Error.");
             } else {
             	finish();
                 Toast.makeText(getApplicationContext(), "Successfully sent", Toast.LENGTH_SHORT).show();
-                Log.i("AsyncTask", "onPostExecute: Completed.");
+                Log.i("ConvertAndPrintTask", "onPostExecute: Completed.");
             }
-            //btnStart.setVisibility(View.VISIBLE);
         }
     }
 }
