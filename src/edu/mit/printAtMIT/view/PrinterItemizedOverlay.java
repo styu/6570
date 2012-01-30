@@ -35,6 +35,7 @@ public class PrinterItemizedOverlay extends ItemizedOverlay<PrinterOverlayItem> 
             MapView mapView) {
         // center point at the bottom of the images points to gps coord
         super(boundCenterBottom(defaultMarker));
+        populate();
         mContext = context;
         this.mapView = mapView;
     }
@@ -67,7 +68,9 @@ public class PrinterItemizedOverlay extends ItemizedOverlay<PrinterOverlayItem> 
      */
     @Override
     public boolean onTouchEvent(MotionEvent e, MapView mapView) {
-        mapView.removeView(balloonView);
+        if (mapView != null && balloonView != null) {
+            mapView.removeView(balloonView);
+        }
         return super.onTouchEvent(e, mapView);
 
     }

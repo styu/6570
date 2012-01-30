@@ -68,20 +68,13 @@ public class PrinterMapActivity extends MapActivity {
         centerLat = MIT_CENTER_LAT;
         centerLong = MIT_CENTER_LONG;
 
-        if (isConnected()) {
-            ParseQuery query = new ParseQuery("PrintersData");
-            if (allView) {
-                refresh(getParseData(query, null));
-            } else {
-                refresh(getParseData(query, extras.getString("id")));
-            }
+        RefreshTask task = new RefreshTask();
+        if (allView) {
+            task.execute((String)null);
         }
         else {
-            Toast.makeText(getApplicationContext(),
-                    "Error getting data, please try again later",
-                    Toast.LENGTH_SHORT).show();
+            task.execute(extras.getString("id"));
         }
-
     }
 
     @Override
@@ -92,22 +85,6 @@ public class PrinterMapActivity extends MapActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (isConnected()) {
-            ParseQuery query = new ParseQuery("PrintersData");
-            if (allView) {
-                refresh(getParseData(query, null));
-            } else {
-                refresh(getParseData(query, extras.getString("id")));
-            }
-            if (myLocationOverlay != null) {
-                myLocationOverlay.enableMyLocation();
-            }
-        }
-        else {
-            Toast.makeText(getApplicationContext(),
-                    "Error getting data, please try again later",
-                    Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override
@@ -205,7 +182,6 @@ public class PrinterMapActivity extends MapActivity {
         // make mapview start at MIT if allView, else animate to selected
         // printer loc
         if (allView) {
-            // TODO: set center at your current location
             if (myLocationOverlay.getMyLocation() != null) {
                 centerLat = myLocationOverlay.getMyLocation().getLatitudeE6();
                 centerLong = myLocationOverlay.getMyLocation().getLongitudeE6();
@@ -324,6 +300,9 @@ public class PrinterMapActivity extends MapActivity {
         return networkInfo == null ? false : networkInfo.isConnected();
     }
 
+    /**
+     * Background task for refreshing parse data.
+     */
     public class RefreshTask extends
             AsyncTask<String, byte[], List<ParseObject>> {
         private ProgressDialog dialog;
