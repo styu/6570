@@ -28,14 +28,10 @@
         <activity android:name=".main.MainMenuActivity"
             android:configChanges="keyboardHidden|orientation"></activity>
         <activity android:name=".main.SettingsActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:label="User Preferences"></activity>
-        <activity android:name=".print.PrintDownloadsActivity"
-            android:label="Select File"></activity>
-        <activity android:name=".print.PrintMenuActivity"
-            android:label="Print files"></activity>
+            android:configChanges="keyboardHidden|orientation"></activity>
+        <activity android:name=".print.PrintDownloadsActivity"/>
+        <activity android:name=".print.PrintMenuActivity"/>
         <activity android:name=".print.PrintOptionsActivity"
-            android:label="Printing Options"
             android:configChanges="keyboardHidden|orientation">
     		<intent-filter>
         		<action android:name="android.intent.action.VIEW" />

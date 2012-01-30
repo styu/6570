@@ -31,7 +31,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.InputType;
 import android.util.Log;
@@ -70,16 +69,15 @@ import edu.mit.printAtMIT.main.SettingsActivity;
  */
 
 public class PrintOptionsActivity extends ListActivity {
-    PrintTask printTask;
-    String fileLoc;
-    String fileName;
-    String queue;
-    String userName;
-    int numCopies;
+    private String fileLoc;
+    private String fileName;
+    private String queue;
+    private String userName;
+    private int numCopies;
     
     //public static Button btnStart;
     
-    final String hostName = "mitprint.mit.edu";
+    private static final String hostName = "mitprint.mit.edu";
     
     ArrayList<Item> items = new ArrayList<Item>();
 	private static final int ITEM_FILENAME = 1;
@@ -96,13 +94,17 @@ public class PrintOptionsActivity extends ListActivity {
 		fileLoc =  cursor.getString(column_index);
 		return fileLoc;
 	}
+	
 	private String convertImage(String fileLoc){
    		ImageConverterTask imageConverter = new ImageConverterTask();
    		imageConverter.execute(new String[] { fileLoc });
-        String extStorageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
-        File f = new File(extStorageDirectory, "printAtMIT.pdf");
+        //String extStorageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
+        //File f = new File(extStorageDirectory, "printAtMIT.pdf");
+        String intStorageDirectory = getFilesDir().toString();
+        File f = new File(intStorageDirectory, "printAtMIT.pdf");
 		return f.getPath();
 	}
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -156,8 +158,10 @@ public class PrintOptionsActivity extends ListActivity {
             	// when called from sharing web page (send intent)
            		UrlConverterTask urlConverter = new UrlConverterTask();
            		urlConverter.execute(new String[] { url });
-                String extStorageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
-                File f = new File(extStorageDirectory, "printAtMIT.pdf");
+                //String extStorageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
+                //File f = new File(extStorageDirectory, "printAtMIT.pdf");
+                String intStorageDirectory = getFilesDir().toString();
+                File f = new File(intStorageDirectory, "printAtMIT.pdf");
            		fileName = url;
            		fileLoc = f.getPath();
            	}
@@ -165,6 +169,7 @@ public class PrintOptionsActivity extends ListActivity {
         
         SharedPreferences userSettings = getSharedPreferences(PrintAtMITActivity.PREFS_NAME, MODE_PRIVATE);
         userName = userSettings.getString(PrintAtMITActivity.USERNAME, "");
+        numCopies = userSettings.getInt(PrintAtMITActivity.COPIES, 1);
         if (userSettings.getString(PrintAtMITActivity.INKCOLOR, PrintAtMITActivity.BLACKWHITE).equals("Color"))
         	queue = "color";
         else
@@ -183,7 +188,6 @@ public class PrintOptionsActivity extends ListActivity {
         items.add(new SectionItem("Printer Preferences"));
         items.add(new EntryItem("Ink Color", userSettings.getString(PrintAtMITActivity.INKCOLOR, PrintAtMITActivity.BLACKWHITE), ITEM_INKCOLOR));
         items.add(new EntryItem("Copies", ""+userSettings.getInt(PrintAtMITActivity.COPIES, 1), ITEM_COPIES));
-        numCopies = userSettings.getInt(PrintAtMITActivity.COPIES, 1);
         
         items.add(new ButtonItem("Print", ITEM_PRINT_BUTTON));
         //items.add(new EntryItem("Print", "", ITEM_PRINT_BUTTON));
@@ -198,6 +202,12 @@ public class PrintOptionsActivity extends ListActivity {
         //btnStart.setOnClickListener(btnStartListener);
         
         //textStatus = (TextView)findViewById(R.id.textStatus);
+        
+        //String intStorageDirectory = getFilesDir().toString();
+        //File f = new File(intStorageDirectory, "printAtMIT.pdf");
+        //Toast.makeText(getApplicationContext(), f.getPath(), Toast.LENGTH_SHORT).show();
+        
+
     }
     
     @Override
@@ -264,8 +274,10 @@ public class PrintOptionsActivity extends ListActivity {
                 HttpResponse responsePOST = client.execute(post);
                 HttpEntity resEntity = responsePOST.getEntity();  
                 InputStream inputStream = resEntity.getContent();
-                String extStorageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
-                File f = new File(extStorageDirectory, "printAtMIT.pdf");
+                //String extStorageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
+                //File f = new File(extStorageDirectory, "printAtMIT.pdf");
+                String intStorageDirectory = getFilesDir().toString();
+                File f = new File(intStorageDirectory, "printAtMIT.pdf");
                 
             	OutputStream out = new FileOutputStream(f);
 
@@ -331,8 +343,10 @@ public class PrintOptionsActivity extends ListActivity {
                 HttpEntity resEntity = responsePOST.getEntity();  
                 
                 InputStream inputStream = resEntity.getContent();
-                String extStorageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
-                File f = new File(extStorageDirectory, "printAtMIT.pdf");
+                //String extStorageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
+                //File f = new File(extStorageDirectory, "printAtMIT.pdf");
+                String intStorageDirectory = getFilesDir().toString();
+                File f = new File(intStorageDirectory, "printAtMIT.pdf");
 
             	OutputStream out = new FileOutputStream(f);
 
@@ -514,7 +528,7 @@ public class PrintOptionsActivity extends ListActivity {
 	        	break;
 
     		case ITEM_PRINT_BUTTON:
-    			printTask = new PrintTask();
+    			PrintTask printTask = new PrintTask();
                 printTask.execute();
                 break;
     		default: Toast.makeText(this, "herp derp", Toast.LENGTH_SHORT).show(); break;
@@ -572,6 +586,10 @@ public class PrintOptionsActivity extends ListActivity {
         @Override
         protected void onPostExecute(Boolean result) {
         	dialog.dismiss();
+            String intStorageDirectory = getFilesDir().toString();
+            File f = new File(intStorageDirectory, "printAtMIT.pdf");
+            f.delete();
+            
             if (result) {
             	finish();
                 Toast.makeText(getApplicationContext(), "Error sending, try again", Toast.LENGTH_SHORT).show();

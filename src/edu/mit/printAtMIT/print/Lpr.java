@@ -209,7 +209,6 @@ public class Lpr {
 	}
 
 	private void acknowledge(InputStream in, String alert) throws IOException {
-		System.out.println("alert: " + alert);
 		if (in.read() != 0) {
 			throw new IOException(alert);
 		}
