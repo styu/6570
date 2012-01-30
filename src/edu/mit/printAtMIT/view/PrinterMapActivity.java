@@ -9,8 +9,7 @@ import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
-import com.google.android.maps.OverlayItem;
-import com.google.android.maps.ItemizedOverlay;
+
 
 import edu.mit.printAtMIT.R;
 import edu.mit.printAtMIT.main.MainMenuActivity;
@@ -29,7 +28,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -167,6 +165,7 @@ public class PrinterMapActivity extends MapActivity {
             intent = new Intent(
                     findViewById(android.R.id.content).getContext(),
                     PrinterListActivity.class);
+            intent.putExtra(PrintListMenuActivity.LIST_TYPE, PrintListMenuActivity.LIST_ALL);
             startActivity(intent);
             return true;
         default:
@@ -213,6 +212,12 @@ public class PrinterMapActivity extends MapActivity {
             }
             controller.setCenter(new GeoPoint(centerLat, centerLong));
 
+        }
+        else {
+            if (objects != null && objects.size() > 0) {
+                centerLat = Integer.parseInt(objects.get(0).getString("latitude"));
+                centerLong = Integer.parseInt(objects.get(0).getString("longitude"));
+            }
         }
         controller.setZoom(17);
         controller.animateTo(new GeoPoint(centerLat, centerLong));

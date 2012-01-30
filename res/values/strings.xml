@@ -8,7 +8,7 @@
 	<string name="about">About</string>
 	<string name="bw">Black and White</string>
 	<string name="color">Color</string>
-	<string name="list">List</string>
+	<string name="list">All Printers</string>
 	<string name="refresh">Refresh</string>
 	<string name="about_blurb">Welcome to print@mit! This app was made for MIT\'s first 6.570 competition. In this app, you can print from your phone and view up to date information about printers. You can print documents, images, and web sites and view printer statuses and locations on an interactive map. You can also "favorite" printers that you use often for easy tracking. \nIf you have any suggestions, please contact us at print@mit.edu!</string>
 </resources>
