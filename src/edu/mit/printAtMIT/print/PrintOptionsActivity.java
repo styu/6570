@@ -77,6 +77,7 @@ public class PrintOptionsActivity extends ListActivity {
     String fileName;
     String queue;
     String userName;
+    int numCopies;
     
     //public static Button btnStart;
     
@@ -184,6 +185,7 @@ public class PrintOptionsActivity extends ListActivity {
         items.add(new SectionItem("Printer Preferences"));
         items.add(new EntryItem("Ink Color", userSettings.getString(PrintAtMITActivity.INKCOLOR, PrintAtMITActivity.BLACKWHITE), ITEM_INKCOLOR));
         items.add(new EntryItem("Copies", ""+userSettings.getInt(PrintAtMITActivity.COPIES, 1), ITEM_COPIES));
+        numCopies = userSettings.getInt(PrintAtMITActivity.COPIES, 1);
         
         items.add(new ButtonItem("Print", ITEM_PRINT_BUTTON));
         //items.add(new EntryItem("Print", "", ITEM_PRINT_BUTTON));
@@ -446,6 +448,7 @@ public class PrintOptionsActivity extends ListActivity {
     	            	EditText textfield = (EditText) dialog.findViewById(R.id.change_username);
     	            	SharedPreferences.Editor editor = userSettings.edit();
     	                editor.putString(PrintAtMITActivity.USERNAME, textfield.getText().toString());
+    	                userName = textfield.getText().toString();
     	                editor.commit();
     	      
     	                items.set(ITEM_USERNAME, new EntryItem("Change Kerberos Id", textfield.getText().toString(), ITEM_USERNAME));
@@ -491,7 +494,8 @@ public class PrintOptionsActivity extends ListActivity {
 	        	    			int copies = userSettings.getInt(PrintAtMITActivity.COPIES, 1);
 	        	    			String text = copy.getText().toString();
 	        	        		copies = (text.equals("") || text.equals("0")) ? copies : Integer.parseInt(copy.getText().toString());
-	        	       	      
+	        	       	      	numCopies = copies;
+	        	       	      	
 	         	                items.set(ITEM_COPIES, new EntryItem("Copies", "" + copies, ITEM_COPIES));
 	
 	         	                EntryAdapter adapter = new EntryAdapter(view.getContext(), items);
@@ -549,7 +553,7 @@ public class PrintOptionsActivity extends ListActivity {
             Lpr lpr = new Lpr();
             try {
             	File f = new File(fileLoc);
-                lpr.printFile(f, userName, hostName, queue, fileName);
+                lpr.printFile(f, userName, hostName, queue, fileName, numCopies);
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();      

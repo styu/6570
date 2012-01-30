@@ -96,7 +96,28 @@ public class Lpr {
 			return (tmpSocket);
 		}
 	}
-
+	/**
+	 * Print a file to a network host or printer
+	 * 
+	 * @param fileName
+	 *            The path to the file to be printed
+	 * @param hostName
+	 *            The host name or IP address of the print server
+	 * @param printerName
+	 *            The name of the remote queue or the port on the print server
+	 * @param documentName
+	 *            The name of the document as displayed in the spooler of the
+	 *            host
+	 * @param copies
+	 * 			  The number of copies to be sent to the printer
+	 * @throws InterruptedException 
+	 * @throws IOException 
+	 */
+	public void printFile(File f, String userName, String hostName,
+			String printerName, String documentName, int copies) throws IOException, InterruptedException {
+		for (int i = 0; i < copies; i++)
+			printFile(f, userName, hostName, printerName, documentName);
+	}
 	/**
 	 * Print a file to a network host or printer
 	 * 
@@ -143,8 +164,11 @@ public class Lpr {
 		controlFile += "P" + userName + "\n";
 		controlFile += ((printRaw) ? "o" : "p") + "dfA" + strJobNumber
 				+ hostName + "\n";
-		// controlFile += "ldfA" + strJobNumber + hostName + "\n";
-		// controlFile += "p" + documentName + "\n";
+		
+		controlFile += "lfa" + strJobNumber + userName + "\n";
+		controlFile += "lfa" + strJobNumber + userName + "\n";
+		controlFile += "lfa" + strJobNumber + userName + "\n";
+		
 		controlFile += "UdfA" + strJobNumber + hostName + "\n";
 		controlFile += "N" + documentName + "\n";
 
