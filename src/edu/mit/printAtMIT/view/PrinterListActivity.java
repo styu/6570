@@ -246,8 +246,13 @@ public class PrinterListActivity extends ListActivity {
         }
         Collections.sort(printers, comparator);
 
-        if (printers.size() == 0 && listType.equals(PrintListMenuActivity.LIST_FAVORITE)) {
-        	items.add(new SectionItem("No favorites to display"));
+        if (printers.size() == 0) {
+        	if (listType.equals(PrintListMenuActivity.LIST_FAVORITE)) {
+        		items.add(new SectionItem("No favorites to display"));
+        	}
+        	else {
+        		items.add(new SectionItem("Check internet connection"));
+        	}
         }
         for (PrinterEntryItem item : printers) {
             items.add(item);
