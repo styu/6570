@@ -329,14 +329,14 @@ public class PrintOptionsActivity extends ListActivity {
     	        
         		return;
     		case ITEM_FILENAME:
-    			final Dialog fileDialog = new Dialog(this);
+/*    			final Dialog fileDialog = new Dialog(this);
 
     			fileDialog.setContentView(R.layout.about_dialog);
     			fileDialog.setTitle(fileName);
     			TextView filename = (TextView) fileDialog.findViewById(R.id.about_text);
     			filename.setText(fileLoc);
     			fileDialog.show();
-    	        
+    	        */
         		return;
         	//context menu appears for ink color
     		case ITEM_INKCOLOR: 
