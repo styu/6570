@@ -265,6 +265,7 @@ public class PrinterInfoActivity extends ListActivity {
 	        setListAdapter(adapter);
 	        
 	        ListView lv = getListView();
+	        
 	        lv.setTextFilterEnabled(true);
     	}
     }

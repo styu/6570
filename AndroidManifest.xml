@@ -50,7 +50,10 @@
 			</intent-filter>
         </activity>
         
-        <activity android:name=".view.PrinterMapActivity" android:launchMode="singleTop"  android:process="map.test">
+        <activity android:name=".view.PrinterMapActivity" 
+                  android:launchMode="singleTop"  
+                  android:process="map.test"
+                  android:configChanges="keyboardHidden|orientation">
             <action android:name="android.intent.action.MAIN" />
         </activity>
         
