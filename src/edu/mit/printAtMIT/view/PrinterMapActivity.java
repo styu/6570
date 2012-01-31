@@ -134,14 +134,7 @@ public class PrinterMapActivity extends MapActivity {
             startActivity(intent);
             return true;
         case R.id.about:
-	    	Dialog dialog = new Dialog(this);
-	    	dialog.setContentView(R.layout.about_dialog);
-	    	dialog.setTitle("About");
-	    	dialog.show();
-	    		
-	    	TextView tv = (TextView) dialog.findViewById(R.id.about_text);
-	    	Linkify.addLinks(tv, Linkify.ALL);
-	    	tv.setMovementMethod(LinkMovementMethod.getInstance());
+        	showAboutDialog();
             super.onOptionsItemSelected(item);
             return true;
         case R.id.list:
@@ -155,7 +148,21 @@ public class PrinterMapActivity extends MapActivity {
             return super.onOptionsItemSelected(item);
         }
     }
-
+    
+    private void showAboutDialog() {
+		showDialog(0);
+	}
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		final Dialog dialog = new Dialog(this);
+    	dialog.setContentView(R.layout.about_dialog);
+    	dialog.setTitle("About");
+    	TextView tv = (TextView) dialog.findViewById(R.id.about_text);
+    	Linkify.addLinks(tv, Linkify.ALL);
+    	tv.setMovementMethod(LinkMovementMethod.getInstance());
+		return dialog;
+	}
+	
     private void refresh(List<ParseObject> objects) {
         // if (allView) {
         // setPrinterList(query, null);

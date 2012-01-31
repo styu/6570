@@ -30,7 +30,7 @@
         <activity android:name=".main.SettingsActivity"
             android:configChanges="keyboardHidden|orientation"></activity>
         <activity android:name=".print.PrintDownloadsActivity"/>
-        <activity android:name=".print.PrintMenuActivity"/>
+        <activity android:name=".print.PrintMenuActivity" />
         <activity android:name=".print.PrintOptionsActivity"
             android:configChanges="keyboardHidden|orientation">
     		<intent-filter>
