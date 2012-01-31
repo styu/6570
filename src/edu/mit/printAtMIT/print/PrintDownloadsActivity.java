@@ -8,6 +8,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import edu.mit.printAtMIT.R;
 import edu.mit.printAtMIT.main.MainMenuActivity;
@@ -128,11 +131,14 @@ public class PrintDownloadsActivity extends FileViewActivity {
 			startActivity(intent);
 			return true;
 		case R.id.about:
-			Dialog dialog = new Dialog(this);
-
-			dialog.setContentView(R.layout.about_dialog);
-			dialog.setTitle("About");
-			dialog.show();
+	    	Dialog dialog = new Dialog(this);
+	    	dialog.setContentView(R.layout.about_dialog);
+	    	dialog.setTitle("About");
+	    	dialog.show();
+	    		
+	    	TextView tv = (TextView) dialog.findViewById(R.id.about_text);
+	    	Linkify.addLinks(tv, Linkify.ALL);
+	    	tv.setMovementMethod(LinkMovementMethod.getInstance());
 			super.onOptionsItemSelected(item);
 			return true;
 		default:

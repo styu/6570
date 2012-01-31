@@ -7,11 +7,14 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.TextView;
 import edu.mit.printAtMIT.R;
 import edu.mit.printAtMIT.print.PrintMenuActivity;
 import edu.mit.printAtMIT.view.PrintListMenuActivity;
@@ -70,11 +73,15 @@ public class MainMenuActivity extends Activity{
         	startActivity(intent);
             return true;
         case R.id.about:
-        	Dialog dialog = new Dialog(this);
-
-			dialog.setContentView(R.layout.about_dialog);
-			dialog.setTitle("About");
-			dialog.show();
+	    	Dialog dialog = new Dialog(this);
+	    	dialog.setContentView(R.layout.about_dialog);
+	    	dialog.setTitle("About");
+	    	dialog.show();
+	    		
+	    	TextView tv = (TextView) dialog.findViewById(R.id.about_text);
+	    	Linkify.addLinks(tv, Linkify.ALL);
+	    	tv.setMovementMethod(LinkMovementMethod.getInstance());
+	    	
             super.onOptionsItemSelected(item);
             return true;
         default:
