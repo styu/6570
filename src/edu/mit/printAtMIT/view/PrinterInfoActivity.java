@@ -226,9 +226,15 @@ public class PrinterInfoActivity extends ListActivity {
     	final List<Item> items = new ArrayList<Item>();
     	
     	if (printer != null) {
+    		String location = printer.getString("location");
+    		if (printer.getString("commonName") != null && printer.getString("commonName").length() != 0) {
+    			location += "#" + printer.getString("commonName");
+    		}
 	    	PrinterEntryItem p = new PrinterEntryItem(printer.getObjectId(),
-	                printer.getString("printerName"), printer.getString("location"),
+	                printer.getString("printerName"), location,
 	                Integer.parseInt(printer.getString("status")));
+	    	
+	    	items.add(new SectionItem("Printer Info"));
 	    	items.add(p);
 	    	
 	        items.add(new SectionItem("Printer Details"));
