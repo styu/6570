@@ -144,7 +144,7 @@ public class PrinterInfoActivity extends ListActivity {
             button02.setCompoundDrawablesWithIntrinsicBounds(null, img, null, null);
         }
 
-        //mDbAdapter.open();
+        mDbAdapter.open();
     }
 
     @Override

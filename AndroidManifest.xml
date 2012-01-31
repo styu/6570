@@ -57,9 +57,11 @@
             <action android:name="android.intent.action.MAIN" />
         </activity>
         
-        <activity android:name=".view.PrinterInfoActivity"></activity>
+        <activity android:name=".view.PrinterInfoActivity"
+                  android:configChanges="keyboardHidden|orientation"></activity>
         <activity android:name=".view.PrintListMenuActivity"></activity>
-        <activity android:name=".view.PrinterListActivity"></activity>
+        <activity android:name=".view.PrinterListActivity"
+                  android:configChanges="keyboardHidden|orientation"></activity>
     </application>
 
 </manifest>
