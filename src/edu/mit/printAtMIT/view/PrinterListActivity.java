@@ -165,7 +165,7 @@ public class PrinterListActivity extends ListActivity {
                 //COMMON NAME
                 StringBuilder location = new StringBuilder(o.getString("location"));
                 if (o.getString("commonName") != null && o.getString("commonName").length() != 0) {
-                    location.append("(" + o.getString("commonName") + ")");
+                    location.append("#" + o.getString("commonName"));
                 }
                 all_map.put(o.getObjectId(), new PrinterEntryItem(o.getObjectId(),
                             o.getString("printerName"), location.toString(),

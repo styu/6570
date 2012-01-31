@@ -44,8 +44,19 @@ public class EntryAdapter extends ArrayAdapter<Item> {
                 sectionView.setText(si.getTitle());
             } else if (i.isPrinterEntry()) {
                 PrinterEntryItem pei = (PrinterEntryItem) i;
-                //TODO: make new layout for printer entries that show printer name, printer location, and printer status
-                v = vi.inflate(R.layout.printer_list_item_entry, null);
+                
+                if (pei.location.contains("#")) {
+                	v = vi.inflate(R.layout.printer_list_item_entry_long, null);
+                	final TextView printerCommonLocation = (TextView) v
+                			.findViewById(R.id.list_item_printer_common_location);
+                	if (printerCommonLocation != null) {
+                		String commonLocation = pei.location.split("#")[1];
+                		printerCommonLocation.setText(commonLocation);
+                	}
+                }
+                else {
+                	v = vi.inflate(R.layout.printer_list_item_entry, null);
+                }
                 //final TextView text = (TextView) v.findViewById(R.id.list_item_text);
                 
                 final TextView printerName = (TextView) v
@@ -55,10 +66,17 @@ public class EntryAdapter extends ArrayAdapter<Item> {
                 final TextView printerStatus = (TextView) v
                 		.findViewById(R.id.list_item_printer_status);
                 
+                
                 if (printerName != null)
                 	printerName.setText(pei.printerName);
-                if (printerLocation != null)
-                	printerLocation.setText(pei.location);
+                if (printerLocation != null) {
+                	if (pei.location.contains("#")) {
+                		printerLocation.setText(pei.location.split("#")[0]);
+                	}
+                	else {
+                		printerLocation.setText(pei.location);
+                	}
+                }
                 if (printerStatus != null) {
                 	String status = pei.getStatusString();
                 	printerStatus.setText(status);

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:padding="5dp" >
+   	
+   	<View
+    android:layout_width="fill_parent"
+    android:layout_height="0.03dip"
+    android:layout_marginLeft="10dip"
+    android:layout_marginRight="10dip"
+    android:layout_marginBottom="30dip"
+    android:background="@android:color/white" />
+    <TextView
+	   android:id="@+id/about_text"
+	   android:layout_width="fill_parent"
+	   android:layout_height="wrap_content"
+	   android:layout_centerHorizontal="true"
+	   android:layout_marginBottom="10dp"
+	   android:scrollHorizontally="false"
+	   android:ellipsize="none"
+	   android:inputType="textMultiLine"
+	   android:singleLine="false"
+	   android:text="@string/about_blurb" />
+
+    
+</LinearLayout>
